@@ -1,29 +1,43 @@
 import logo from './logo.svg';
 import './App.css';
-
+import { Routes, Route } from "react-router-dom";
 import Home from './Pages/Home';
+import Login from './Pages/Login';
+import Dashboard from './Pages/Dashboard';
+import Events from './Pages/Events';
+import Techtalk from './Pages/Techtalk';
+import Registration from './Pages/Registration';
+import CreativeMind from './Pages/CreativeMind';
+import WebDevelopment from './Pages/WebDevelopment';
+import CareerGuidance from './Pages/CareerGuidance';
+import ScienceExpo from './Pages/ScienceExpo';
+import CommunicationSkills from './Pages/CommunicationSkills';
+
+
+
+
 function App() {
   return (
-    <>
-      <div className='frontimg'>
-        <img src='/image1.jpeg'></img>
-        <div className='hero'>
-          <div className='hero-content'>
-            <p>Explore • Learn • Connect • Grow</p>
-            <h1>EventFlow</h1>
-            <h2>Smart Educational Event<br></br> Management Platform</h2>
-            <p>Discover educational events, connect with opportunities, <br></br>and grow your skills - all in one place.</p>
-
-          </div>
-           <div className='login'>
-        <button>Login</button>
-        <button className='btn'>Explore Events →</button>
-      </div>
-        </div>
-      </div>
-     
-    </>
+    
+    
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Login" element={<Login/>}/>
+          <Route path="/Dashboard" element={<Dashboard/>}/>
+          <Route path="/Events" element={<Events/>}/>
+          <Route path="/Techtalk" element={<Techtalk/>}/>
+          <Route path="/CreativeMind" element={<CreativeMind/>}/>
+          <Route path="/WebDevelopment" element={<WebDevelopment/>}/>
+          <Route path="/CareerGuidance" element={<CareerGuidance/>}/>
+          <Route path="/ScienceExpo" element={<ScienceExpo/>}/>
+          <Route path="/CommunicationSkills" element={<CommunicationSkills/>}/>
+          <Route path="/Registration" element={<Registration/>}/>
+    
+        </Routes>
+    
+  
   );
 }
+
 
 export default App;

@@ -1,34 +1,79 @@
 import React from "react";
+import "./Login.css";
 
-export default function login(){
-    return(
-        <>
-        <div>
-        <div className="log">
-            <h1>Welcome Back</h1>
-            <p>Login to continue exploring educational events</p>
-            <input type="text" placeholder="Email / Username"></input>
-            <input type="password" placeholder="Password"></input>
-            <input type="checkbox">Remember me</input>
-            <span>Forgot Password?</span>
-            <button>Login</button>
-            <p>Don't have an account? <span>Sign Up</span></p>
+function Login() {
+  return (
+    <div className="login-page">
+
+      <div className="login-card">
+
+        {/* EventFlow Logo */}
+        <div className="login-logo">
+          <span>EF</span>
         </div>
-        <div>
-            <h1>Hello,Friend!</h1>
-            <p>Create your EventFlow account and start discovering educational events</p>
-            <button>REGISTER →</button>
-        </div>
-        <div>'
-            <h1>Create Your Account</h1>
-            <p>Join EventFlow and start exploring educational events</p>
-            <input type="text" placeholder="Enter Your Full Name"></input>
-             <input type="email" placeholder="Enter Your Email"></input>
-              <input type="password" placeholder="Create a password"></input>
-               <input type="password" placeholder="Confirm your password"></input>
-               <button></button>
-        </div>
-        </div>
-        </>
-    )
+
+        <h1>Welcome to EventFlow</h1>
+
+        <p className="login-subtitle">
+          Sign in to explore educational events
+        </p>
+
+        <form>
+
+          {/* Email */}
+          <div className="input-group">
+            <label>Email Address</label>
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div className="input-group">
+            <label>Password</label>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          {/* Options */}
+          <div className="login-options">
+
+            <label>
+              <input type="checkbox" />
+              Remember me
+            </label>
+
+            <a href="/">Forgot Password?</a>
+
+          </div>
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            className="login-btn" onClick={()=> window.location.href="/Dashboard"}
+          >
+            Login
+          </button>
+
+        </form>
+
+        {/* Signup */}
+        <p className="signup-text">
+          Don't have an account?
+          <a href="/Signup"> Sign Up</a>
+        </p>
+
+      </div>
+
+    </div>
+  );
 }
+
+export default Login;

@@ -4,17 +4,17 @@ import './index.css';
 import App from './App';
 import './App.css';
 import reportWebVitals from './reportWebVitals';
-import Header from './Components/Header';
-import Login from './Pages/Login';
 import Home from './Pages/Home';
+
+import { BrowserRouter } from 'react-router-dom';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Header/>
-    <App />
-    <Login/>
-    <Home/>
+<BrowserRouter>
+    <App/>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

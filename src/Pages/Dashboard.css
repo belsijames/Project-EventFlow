@@ -1,0 +1,181 @@
+*{
+  box-sizing: border-box;
+
+}
+.head{
+  justify-content: center;
+  height: 140vh;
+  background-color: #f5f2fa;
+  margin-left: 120px;
+}
+.search-bar1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+  margin-left: 345px;
+ 
+}
+
+.search-bar1 input {
+  width: 70%;
+  height: 45px;
+  padding: 0 20px;
+  border: 1px solid #ddd6f3;
+  border-radius: 25px;
+  background-color: white;
+  margin-top: 20px;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 3px 10px rgba(50, 20, 95, 0.10);
+}
+
+.search-bar1 input:focus {
+  border: 1px solid #a99bd8;
+  box-shadow: 0 3px 12px rgba(120, 90, 180, 0.18);
+}
+
+.search-bar1 input::placeholder {
+  color: #888;
+}
+.section{
+  margin-left: 145px;
+  margin-top: 20px;
+}
+.section p{
+  margin-top: 20px;
+}
+
+.event-cards{
+ display:flex;
+ justify-content: center;
+ align-items: center;
+ gap: 45px;
+ margin: 40px;
+}
+.event-card{
+  background-color:white;
+  border: 1px solid #d8d0e5;
+  width: 285px;
+  height: 120px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(50, 20, 95, 0.15);
+
+}
+.event-card p{
+  margin-left: 110px;
+  margin-top: -60px;
+}
+.event-card h1{
+   margin-left: 140px;
+  margin-top: 10px;
+}
+.event-card svg{
+  margin-left:30px;
+  margin-top: 30px;
+  background-color: #d8d0e5;
+  padding: 10px;
+  border-radius: 20px;
+}
+.mid{
+  display: flex;
+  gap: 45px;
+  margin-left: 120px;
+
+}
+.card img{
+  width:18rem;
+  border-radius:10px 10px 0 0;
+}
+.event-h1{
+  margin-left: 140px;
+  margin-bottom: 30px;
+}
+.card{
+  margin-left: 18px;
+  background-color: white;
+  height: 400px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(50, 20, 95, 0.15);
+}
+.btn-primary{
+  background-color: #cdb6d8;
+  padding: 10px 60px;
+  margin-left: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-top: 15px;
+  position: absolute;
+}
+.btn-primary:hover{
+   background-color: #9761b1;
+   color: white;
+}
+.card h4{
+  margin-top: 15px;
+}
+.card  p{
+  margin-top: 10px;
+}
+.card-body{
+  margin-left: 30px;
+}
+.card svg{
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.sub {
+  width: 70px;
+  padding: 3px 15px;
+  margin-left: 10px;
+  border-radius: 50px;
+  font-weight: 700;
+  color: #582f6b;
+}
+.navbar1{
+  position: absolute;
+  top:-1px;
+  background-color: #2f123a;
+  height: 55.6rem;
+  color: white;
+}
+.sidebar li{
+  list-style: none;
+  margin-top: 25px;
+  font-size: 15px;
+ 
+}
+.sidebar h1{
+  margin-top: 30px;
+  margin-left: 13px;
+}
+
+.list-group-item:hover{
+  background-color:  #582f6b;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 180px;
+
+}
+.list-group-item{
+ padding: 8px 35px;
+ margin-left: -2px;
+ font-size: 10px;
+}
+.list-group-item svg{
+  margin-right: 8px;
+}
+.logout{
+  margin-left: 10px;
+  font-size: 18px;
+  padding: 10px;
+
+}
+.logout:hover{
+  background-color: #582f6b;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.logout svg{
+  margin-right: 8px;
+}
