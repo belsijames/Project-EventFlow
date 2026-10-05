@@ -3,11 +3,10 @@ import "./Login.css";
 
 function Login() {
   return (
+    <>
     <div className="login-page">
 
       <div className="login-card">
-
-        {/* EventFlow Logo */}
         <div className="login-logo">
           <span>EF</span>
         </div>
@@ -20,29 +19,18 @@ function Login() {
 
         <form>
 
-          {/* Email */}
           <div className="input-group">
             <label>Email Address</label>
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-              required
-            />
+            <input type="email" placeholder="Enter your email" required />
           </div>
 
-          {/* Password */}
           <div className="input-group">
             <label>Password</label>
 
-            <input
-              type="password"
-              placeholder="Enter your password"
-              required
-            />
+            <input type="password" placeholder="Enter your password" required />
           </div>
 
-          {/* Options */}
           <div className="login-options">
 
             <label>
@@ -54,17 +42,12 @@ function Login() {
 
           </div>
 
-          {/* Login Button */}
-          <button
-            type="submit"
-            className="login-btn" onClick={()=> window.location.href="/Dashboard"}
-          >
-            Login
+          <button type="submit" className="login-btn" onClick={()=> window.location.href="/Dashboard"}>
+                     Login
           </button>
 
         </form>
 
-        {/* Signup */}
         <p className="signup-text">
           Don't have an account?
           <a href="/Signup"> Sign Up</a>
@@ -73,6 +56,10 @@ function Login() {
       </div>
 
     </div>
+    <div className="quote">
+      <h2>Where <br/>New Beginnings Turn Into <br/>New Oppertunities</h2>
+    </div>
+    </>
   );
 }
 

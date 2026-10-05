@@ -39,18 +39,11 @@ function CommunicationSkills() {
     <div className="communication-page">
       <div className="communication-card">
 
-        <img
-          src="/skill.jpeg"
-          alt="Communication Skills Workshop"
-          className="communication-image"
-        />
+        <img src="/skill.jpeg" alt="Communication Skills Workshop" className="communication-image" />
 
         <div className="communication-content">
 
-          <button
-            className="communication-back"
-            onClick={() => window.history.back()}
-          >
+          <button className="communication-back" onClick={() => window.history.back()}>
             ← Back to Events
           </button>
 
@@ -101,10 +94,8 @@ function CommunicationSkills() {
             <h2>About the Workshop</h2>
 
             <p>
-              Communication Skills Workshop is designed to help students
-              improve their speaking, listening and interpersonal communication
-              skills. The workshop provides practical activities and guidance
-              to communicate confidently in academic and professional situations.
+              Communication Skills Workshop is designed to help students improve their speaking, listening and interpersonal communication
+              skills. The workshop provides practical activities and guidance to communicate confidently in academic and professional situations.
             </p>
           </section>
 
@@ -133,11 +124,7 @@ function CommunicationSkills() {
           </section>
 
           <div className="communication-register">
-            <button
-              onClick={() => {
-                window.location.href = "/Registration";
-              }}
-            >
+            <button onClick={() => { window.location.href = "/Registration"; }}>
               Register Now
             </button>
           </div>

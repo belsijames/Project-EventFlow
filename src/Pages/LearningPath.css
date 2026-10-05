@@ -1,0 +1,324 @@
+* {
+  box-sizing: border-box;
+}
+
+.learning-page {
+  min-height: 100vh;
+  margin-top: -40px;
+  padding-bottom: 50px;
+  background: linear-gradient(135deg, #f7f4ff, #eee9ff);
+  font-family: "Poppins", sans-serif;
+  color: #29213f;
+}
+
+.learning-header {
+  margin: 40px 65px 25px;
+  transform: translateY(50px);
+  padding: 35px 45px;
+  width: 66rem;
+  margin-left: 250px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #4b328f, #8060e8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 15px 35px rgba(85, 54, 160, 0.22);
+}
+
+.small-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+
+.learning-header h1 {
+  margin: 0;
+  font-size: 38px;
+}
+
+.learning-quote {
+  margin-top: 10px;
+  font-size: 15px;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.progress-circle {
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  border: 9px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-circle span {
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.progress-circle small {
+  font-size: 11px;
+}
+
+.progress-section {
+  margin: 0 65px 30px;
+  margin-top: 90px;
+  padding: 22px 28px;
+  background: white;
+  width: 66rem;
+  margin-left: 250px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(75, 50, 120, 0.08);
+}
+
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-top h3 {
+  margin: 0;
+}
+
+.progress-top span {
+  color: #7048df;
+  font-weight: 700;
+}
+
+.progress-bar {
+  height: 10px;
+  margin-top: 15px;
+  background: #eeeafa;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(90deg, #6c4bdc, #a36df0);
+  border-radius: 20px;
+}
+
+.progress-section p {
+  margin: 10px 0 0;
+  color: #8a8298;
+  font-size: 13px;
+}
+
+
+.learning-content {
+  margin: 0 65px;
+  width: 66rem;
+  margin-left: 250px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.learning-card {
+  padding: 23px;
+  background: white;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 8px 25px rgba(70, 45, 120, 0.08);
+  transition: 0.3s;
+}
+
+.learning-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(70, 45, 120, 0.14);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #eee8ff;
+  color: #7048df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.completed .card-icon {
+  background: #7048df;
+  color: white;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-info span {
+  font-size: 11px;
+  color: #9a91aa;
+}
+
+.card-info h3 {
+  margin: 3px 0;
+  font-size: 17px;
+}
+
+.card-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #8b8497;
+  line-height: 1.5;
+}
+
+.learning-card button,
+.event-mini button {
+  border: none;
+  background: #7048df;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.learning-card button:hover,
+.event-mini button:hover {
+  background: #5935c3;
+}
+
+
+.recommended {
+  margin: 40px 65px 0;
+  width: 66rem;
+  margin-left: 250px;
+}
+
+.recommended-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recommended-heading h2 {
+  margin: 0;
+}
+
+.recommended-heading > span {
+  color: #7048df;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.event-mini-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.event-mini {
+  background: white;
+  padding: 23px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(70, 45, 120, 0.08);
+}
+
+.event-tag {
+  font-size: 10px;
+  color: #7048df;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.event-mini h3 {
+  margin: 12px 0 8px;
+  font-size: 17px;
+}
+
+.event-mini p {
+  font-size: 12px;
+  color: #8b8497;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .learning-content,
+  .event-mini-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-header {
+    margin: 25px;
+  }
+
+  .progress-section,
+  .learning-content,
+  .recommended {
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+
+  .learning-navbar {
+    padding: 0 25px;
+  }
+}
+.navbar10{
+  position: absolute;
+  top:-1px;
+  background-color: #2f123a;
+  height: 39.6rem;
+  color: white;
+  position: fixed;
+}
+.sidebar li{
+  list-style: none;
+  margin-top: 25px;
+  font-size: 15px;
+ 
+}
+.sidebar h1{
+  margin-top: 30px;
+  margin-left: 13px;
+}
+
+.list-group-item:hover{
+  background-color:  #582f6b;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 180px;
+
+}
+.list-group-item{
+ padding: 8px 35px;
+ margin-left: -2px;
+ font-size: 10px;
+}
+.list-group-item svg{
+  margin-right: 8px;
+}
+.logout{
+  margin-left: 10px;
+  font-size: 18px;
+  padding: 10px;
+  margin-top: 20px;
+}
+.logout:hover{
+  background-color: #582f6b;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.logout svg{
+  margin-right: 8px;
+}

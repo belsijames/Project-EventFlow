@@ -40,18 +40,11 @@ function CareerGuidance() {
 
       <div className="career-card">
 
-        <img
-          src="/Career.jpeg"
-          alt="Career Guidance"
-          className="career-image"
-        />
+        <img src="/Career.jpeg"  alt="Career Guidance"  className="career-image" />
 
         <div className="career-content">
 
-          <button
-            className="career-back"
-            onClick={() => window.history.back()}
-          >
+          <button  className="career-back" onClick={() => window.history.back()} >
             ← Back to Events
           </button>
 
@@ -102,10 +95,8 @@ function CareerGuidance() {
             <h2>About the Event</h2>
 
             <p>
-              Career Guidance Session is an informative event designed
-              to help students understand career opportunities, identify
-              their interests and skills, and make informed decisions
-              about their future career path.
+              Career Guidance Session is an informative event designed to help students understand career opportunities, identify
+              their interests and skills, and make informed decisions about their future career path.
             </p>
           </section>
 
@@ -134,11 +125,7 @@ function CareerGuidance() {
           </section>
 
           <div className="career-register">
-            <button
-              onClick={() => {
-                window.location.href = "/Registration";
-              }}
-            >
+            <button onClick={() => {  window.location.href = "/Registration";  }} >
               Register Now
             </button>
           </div>

@@ -5,7 +5,7 @@ import "./Home.css";
         <>
             <div className='home-page'>
                 <div className='frontimg'>
-                    <img src="/image1.jpeg" alt="EventFlow Background"/>
+                    <img src="/background.jpeg" alt="EventFlow Background"/>
 
                     <div className='hero'>
 
@@ -17,8 +17,7 @@ import "./Home.css";
 
                         </div>
                         <div className='log'>
-                            <a href='/login' className='login-b'>Login</a>
-                            <button className='btn'>Explore Events →</button>
+                            <button className='btn' onClick={()=> window.location.href="/Login"}>Explore Events →</button>
                         </div>
                     </div>
                 </div>

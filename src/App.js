@@ -12,6 +12,11 @@ import WebDevelopment from './Pages/WebDevelopment';
 import CareerGuidance from './Pages/CareerGuidance';
 import ScienceExpo from './Pages/ScienceExpo';
 import CommunicationSkills from './Pages/CommunicationSkills';
+import LearningPath from './Pages/LearningPath';
+import Quiz from './Pages/Quiz';
+import QuizResult from './Pages/QuizResult';
+import MyRegistration from './Pages/MyRegistration';
+import Profile from './Pages/Profile';
 
 
 
@@ -31,7 +36,12 @@ function App() {
           <Route path="/CareerGuidance" element={<CareerGuidance/>}/>
           <Route path="/ScienceExpo" element={<ScienceExpo/>}/>
           <Route path="/CommunicationSkills" element={<CommunicationSkills/>}/>
+          <Route path="/LearningPath" element={<LearningPath/>}/>
+          <Route path="/quiz/:topic" element={<Quiz/>}/>
+          <Route path="/quiz-result/:topic" element={<QuizResult/>}/>
+          <Route path="/MyRegistration" element={<MyRegistration/>}/>
           <Route path="/Registration" element={<Registration/>}/>
+          <Route path="/Profile"  element={<Profile/>}/>
     
         </Routes>
     

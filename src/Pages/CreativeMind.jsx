@@ -94,10 +94,8 @@ function CreativeMind() {
             <h2>About the Workshop</h2>
 
             <p>
-              Creative Mind Workshop is an interactive learning session
-              designed to help students develop creative thinking,
-              problem-solving skills and innovative ideas through
-              engaging activities and practical exercises.
+              Creative Mind Workshop is an interactive learning session designed to help students develop creative thinking,
+              problem-solving skills and innovative ideas through engaging activities and practical exercises.
             </p>
           </section>
 
@@ -126,11 +124,7 @@ function CreativeMind() {
           </section>
 
           <div className="creative-register">
-            <button
-              onClick={() => {
-                window.location.href = "/Registration";
-              }}
-            >
+            <button onClick={() => { window.location.href = "/Registration"; }}>
               Register Now
             </button>
           </div>
