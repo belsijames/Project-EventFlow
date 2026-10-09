@@ -1,143 +1,400 @@
-import React from "react";
-import "./WebDevelopment.css";
+import React, {useState} from "react";
+import { Link, useParams,useNavigate } from "react-router-dom";
+import "./Techtalk.css";
 
 function WebDevelopment() {
+    const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("about")
   return (
-    <>
-    <div className="body">
-                <div className="navbar4">
+    <div className="techtalk-page">
 
-                <div class="nav-card" style={{ width: "13rem" }}>
-                    <ul class="sidebar">
-                        <h1>EventFlow</h1>
-                        <li className="list-group-item" onClick={()=> window.location.href='/Dashboard'}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
-                                <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                            </svg>Dashboard</li>
-                        <li className="list-group-item" onClick={() => window.location.href = "/Events"}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
-                                <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
-                                <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                            </svg>Events</li>
-                        <li className="list-group-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-medical" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v.634l.549-.317a.5.5 0 1 1 .5.866L9 6l.549.317a.5.5 0 1 1-.5.866L8.5 6.866V7.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L7 6l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V4.5A.5.5 0 0 1 8 4M5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
-                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                            </svg>My Registrations</li>
-                        <li className="list-group-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-                            </svg>Profile</li>
-                    </ul>
-                </div>
-                <p className="logout" style={{marginTop:"420px"}}> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
-                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
-                </svg>Logout</p>
-            </div>
-    <div className="webdev-page">
+      {/* Sidebar */}
+      <aside className="sidebar">
 
-      <div className="webdev-card">
-        <img src="/bootcamp.jpeg" alt="Web Development Bootcamp"  className="webdev-image" />
+        <div className="logo">
+          <span className="logo-icon">🎓</span>
+          <span>Event<span>Flow</span></span>
+        </div>
 
-        <div className="webdev-content">
+        <ul className="side-menu">
 
-          <button className="webdev-back" onClick={() => window.history.back()} >
-            ← Back to Events
-          </button>
+          <li>
+                     <Link to="/dashboard">
+                       <span>⌂</span> Dashboard
+                     </Link>
+                   </li>
+         
+                   <li className="active">
+                     <Link to="/events">
+                       <span>▣</span> Events
+                     </Link>
+                   </li>
+         
+                   <li>
+                     <Link to="/learning">
+                       <span>▤</span> Learning Path
+                     </Link>
+                   </li>
+         
+                   <li>
+                     <Link to="/MyRegistration">
+                       <span>♧</span> My Registration
+                     </Link>
+                   </li>
+         
+                   <li>
+                     <Link to="/Profile">
+                       <span>♙</span> Profile
+                     </Link>
+                   </li>
 
-          <h1>Web Development Bootcamp</h1>
+        </ul>
 
-          <div className="webdev-tags">
-            <span>Bootcamp</span>
-            <span>Free</span>
-          </div>
 
-          <div className="webdev-details">
+      </aside>
 
-            <div className="webdev-detail">
-              <span>📅</span>
-              <div>
-                <small>Date</small>
-                <p>25 October 2025</p>
-              </div>
-            </div>
 
-            <div className="webdev-detail">
-              <span>⏰</span>
-              <div>
-                <small>Time</small>
-                <p>9:30 AM - 1:00 PM</p>
-              </div>
-            </div>
+      {/* Main Content */}
+      <main className="main-content">
 
-            <div className="webdev-detail">
-              <span>📍</span>
-              <div>
-                <small>Venue</small>
-                <p>Computer Science Lab</p>
-              </div>
-            </div>
+        {/* Top Header */}
+        <div className="top-header">
 
-            <div className="webdev-detail">
-              <span>👥</span>
-              <div>
-                <small>Organized By</small>
-                <p>Department of Computer Science</p>
-              </div>
-            </div>
+          <Link to="/events" className="back-events">
+            ← &nbsp; Back to Events
+          </Link>
 
-          </div>
+          <div className="header-icons">
 
-          <section className="webdev-about">
-            <h2>About the Bootcamp</h2>
+            <span>🔔</span>
 
-            <p>
-              Web Development Bootcamp is a hands-on learning session
-              designed to help students understand the fundamentals of
-              modern web development. Participants will learn how to
-              build responsive and interactive websites through
-              practical activities and guided exercises.
-            </p>
-          </section>
+            <span className="profile-circle">
+              👤
+            </span>
 
-          <section className="webdev-highlights">
-            <h2>Highlights</h2>
+            <span>⌄</span>
 
-            <div className="webdev-highlight">
-              <span>✓</span>
-              HTML & CSS Fundamentals
-            </div>
-
-            <div className="webdev-highlight">
-              <span>✓</span>
-              JavaScript Basics
-            </div>
-
-            <div className="webdev-highlight">
-              <span>✓</span>
-              Responsive Web Design
-            </div>
-
-            <div className="webdev-highlight">
-              <span>✓</span>
-              Hands-on Website Building
-            </div>
-          </section>
-
-          <div className="webdev-register">
-            <button onClick={() => { window.location.href = "/Registration"; }}>
-              Register Now
-            </button>
           </div>
 
         </div>
+
+
+        {/* Hero Image */}
+        <div className="event-hero">
+
+          <img
+            src="/bootcamp.jpeg"
+            alt="Web Development Bootcamp"
+          />
+
+          <div className="hero-tags">
+
+            <span className="tag-purple">
+              Web Development
+            </span>
+
+            <span className="tag-white">
+              Bootcamp
+            </span>
+
+          </div>
+
+        </div>
+
+
+        {/* Event Title */}
+        <div className="event-heading">
+
+          <div>
+
+            <h1>Web Development Bootcamp</h1>
+
+            <div className="event-info">
+
+              <span>
+                📅 &nbsp;20 Oct 2026
+              </span>
+
+              <span>
+                🕐 &nbsp;10:00 AM – 4:00 PM
+              </span>
+
+              <span>
+                📍 &nbsp;Computer Science Department
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div className="event-actions">
+
+            
+    <button className="register-btn"
+      onClick={() =>
+        navigate("/registration/WebDevelopment", {
+          state: { eventName: "Web Development Bootcamp" }
+        })
+      }
+    >
+      Register Now
+    </button>
+
+            <button className="heart-btn">
+              ♡
+            </button>
+
+          </div>
+
+        </div>
+
+
+        {/* Tabs */}
+        <div className="tabs">
+
+          <div className="tabs">
+  <div
+    className={`tab ${activeTab === "about" ? "active-tab" : ""}`}
+    onClick={() => setActiveTab("about")}
+  >
+    About
+  </div>
+
+  <div
+    className={`tab ${activeTab === "highlights" ? "active-tab" : ""}`}
+    onClick={() => setActiveTab("highlights")}
+  >
+    Highlights
+  </div>
+
+  <div
+    className={`tab ${activeTab === "activities" ? "active-tab" : ""}`}
+    onClick={() => setActiveTab("activities")}
+  >
+    Activities
+  </div>
+
+  <div
+    className={`tab ${activeTab === "location" ? "active-tab" : ""}`}
+    onClick={() => setActiveTab("location")}
+  >
+    Location
+  </div>
+</div>
+
+        </div>
+
+
+        {/* About Section */}
+        <div className="details-section">
+
+          {activeTab === "about" && (
+  <div className="content-grid">
+    <div className="about-card">
+      <div className="card-content">
+        <h2>About the Event</h2>
+
+        <p>
+          Web Development Bootcamp is a practical learning session designed
+          to help students understand modern web development concepts and
+          build interactive websites using essential frontend and backend
+          technologies.
+        </p>
+
+        <div className="feature-row">
+          <div className="feature-card">
+            <span>🌐</span>
+            <h3>Frontend Development</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>⚛️</span>
+            <h3>React.js</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>🖥️</span>
+            <h3>Backend Basics</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>💻</span>
+            <h3>Hands-on Project</h3>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div className="highlight-card">
+      <div className="card-content">
+        <h3>Key Highlights</h3>
+        <ul>
+          <li>Hands-on Coding Sessions</li>
+          <li>HTML, CSS & JavaScript</li>
+          <li>React.js Introduction</li>
+          <li>Real-world Project Experience</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
+{activeTab === "highlights" && (
+  <div className="content-grid">
+    <div className="about-card">
+      <div className="card-content">
+        <h2>Event Highlights</h2>
+
+        <p>
+          The bootcamp provides an interactive learning experience through
+          coding demonstrations, practical exercises and project-based
+          development activities.
+        </p>
+
+        <div className="feature-row">
+          <div className="feature-card">
+            <span>💻</span>
+            <h3>Live Coding</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>🎨</span>
+            <h3>UI Development</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>⚛️</span>
+            <h3>React Practice</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>🚀</span>
+            <h3>Project Building</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="highlight-card">
+      <div className="card-content">
+        <h3>What You'll Gain</h3>
+        <ul>
+          <li>Build Responsive Websites</li>
+          <li>Understand Modern Web Technologies</li>
+          <li>Improve Coding Skills</li>
+          <li>Gain Practical Project Experience</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
+{activeTab === "activities" && (
+  <div className="content-grid">
+    <div className="about-card">
+      <div className="card-content">
+        <h2>Bootcamp Activities</h2>
+
+        <p>
+          Students will participate in practical coding activities,
+          development challenges and project-based tasks to apply their
+          web development knowledge.
+        </p>
+
+        <div className="feature-row">
+          <div className="feature-card">
+            <span>📝</span>
+            <h3>HTML & CSS Practice</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>⚡</span>
+            <h3>JavaScript Tasks</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>⚛️</span>
+            <h3>React Activities</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>🛠️</span>
+            <h3>Mini Project</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="highlight-card">
+      <div className="card-content">
+        <h3>Activity Highlights</h3>
+        <ul>
+          <li>Website Development Tasks</li>
+          <li>Interactive Coding Exercises</li>
+          <li>Frontend Design Challenges</li>
+          <li>Mini Project Development</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
+{activeTab === "location" && (
+  <div className="content-grid">
+    <div className="about-card">
+      <div className="card-content">
+        <h2>Event Location</h2>
+
+        <p>
+          The Web Development Bootcamp will be conducted in the Computer
+          Science Department. Participants are encouraged to arrive before
+          the scheduled time and bring their learning materials.
+        </p>
+
+        <div className="feature-row">
+          <div className="feature-card">
+            <span>📍</span>
+            <h3>Computer Science Department</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>📅</span>
+            <h3>20 October 2026</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>⏰</span>
+            <h3>10:00 AM – 4:00 PM</h3>
+          </div>
+
+          <div className="feature-card">
+            <span>🎓</span>
+            <h3>College Campus</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="highlight-card">
+      <div className="card-content">
+        <h3>Event Details</h3>
+        <ul>
+          <li>Venue: Computer Science Department</li>
+          <li>Date: 20 October 2026</li>
+          <li>Time: 10:00 AM – 4:00 PM</li>
+          <li>Open for Students</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
+        </div>
+
+      </main>
 
     </div>
-    </div>
-    </>
   );
 }
 

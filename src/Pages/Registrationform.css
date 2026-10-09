@@ -1,0 +1,241 @@
+.event-registration-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px 0;
+  box-sizing: border-box;
+
+  overflow-y: auto;
+}
+
+/* Background */
+.registration-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Dark Overlay */
+.registration-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(20, 10, 35, 0.70);
+
+  z-index: 1;
+}
+
+/* Card */
+.registration-card {
+  position: relative;
+  z-index: 2;
+
+  width: 470px;
+
+  padding: 38px 42px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  border-radius: 22px;
+  margin-right: 500px;
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.38);
+
+  backdrop-filter: blur(10px);
+
+  box-sizing: border-box;
+}
+
+/* Header */
+.registration-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.registration-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+
+  color: #6c3bb8;
+
+  font-weight: 700;
+}
+
+.registration-header h2 {
+  margin: 8px 0;
+
+  font-size: 25px;
+
+  color: #29203b;
+}
+
+.registration-header p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+/* Selected Event */
+.selected-event {
+  padding: 14px 16px;
+
+  margin-bottom: 22px;
+
+  border-radius: 12px;
+
+  background: #f3edfc;
+
+  border-left: 4px solid #6c3bb8;
+}
+
+.selected-event span {
+  display: block;
+
+  font-size: 12px;
+
+  color: #777;
+
+  margin-bottom: 4px;
+}
+
+.selected-event strong {
+  display: block;
+
+  font-size: 16px;
+
+  color: #5b319c;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #40344f;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 13px 15px;
+
+  border: 1px solid #d7cbe8;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #7b4bc4;
+
+  box-shadow:
+    0 0 0 3px rgba(123, 75, 196, 0.12);
+}
+
+/* Register Button */
+.register-event-btn {
+  width: 100%;
+
+  padding: 14px;
+
+  margin-top: 5px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #6c3bb8,
+    #8d5bd1
+  );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.register-event-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(108, 59, 184, 0.30);
+}
+
+/* Back */
+.registration-back {
+  text-align: center;
+
+  margin-top: 18px;
+}
+
+.registration-back button {
+  border: none;
+
+  background: transparent;
+
+  color: #6c3bb8;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.registration-back button:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .registration-card {
+    width: 90%;
+
+    padding: 30px 25px;
+  }
+}

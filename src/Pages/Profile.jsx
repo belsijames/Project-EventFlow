@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
@@ -8,41 +9,43 @@ function Profile() {
   return (
     <div className="profile-page">
 
-      {/* Navbar */}
-      <nav className="profile-navbar">
-
-        <div
-          className="profile-logo"
-          onClick={() => navigate("/dashboard")}
-        >
-          Event<span>Flow</span>
-        </div>
-
-        <ul className="profile-nav-links">
-          <li onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </li>
-
-          <li onClick={() => navigate("/events")}>
-            Events
-          </li>
-
-          <li onClick={() => navigate("/learning")}>
-            Learning Path
-          </li>
-
-          <li onClick={() => navigate("/my-registration")}>
-            My Registration
-          </li>
-
-          <li className="active">
-            Profile
-          </li>
-        </ul>
-
-      </nav>
-
-      {/* Content */}
+      <aside className="ef-sidebar">
+     
+                     <div className="ef-brand">
+                         <div className="ef-brand-icon">◆</div>
+                         <span>EventFlow</span>
+                     </div>
+     
+                     <nav className="ef-navigation">
+     
+                         <Link to="/dashboard" className="ef-nav-item">
+                             <span className="ef-nav-icon">⌂</span>
+                             <span>Dashboard</span>
+                         </Link>
+     
+                         <Link to="/events" className="ef-nav-item">
+                             <span className="ef-nav-icon">▣</span>
+                             <span>Events</span>
+                         </Link>
+     
+                         <Link to="/learning" className="ef-nav-item">
+                             <span className="ef-nav-icon">▤</span>
+                             <span>Learning Path</span>
+                         </Link>
+     
+                         <Link to="/myregistration" className="ef-nav-item">
+                             <span className="ef-nav-icon">◷</span>
+                             <span>My Registration</span>
+                         </Link>
+     
+                         <Link to="/profile" className="ef-nav-item active">
+                             <span className="ef-nav-icon">♙</span>
+                             <span>Profile</span>
+                         </Link>
+     
+                     </nav>
+     
+                 </aside>
       <main className="profile-content">
 
         <div className="profile-title">
@@ -52,11 +55,10 @@ function Profile() {
           </p>
         </div>
 
-        {/* Profile Top Card */}
         <section className="profile-card">
 
           <div className="profile-avatar">
-            <span>JM</span>
+            <img src="profile.jpg"/>
           </div>
 
           <div className="profile-main-info">
@@ -77,10 +79,9 @@ function Profile() {
 
         </section>
 
-        {/* Main Grid */}
+
         <div className="profile-grid">
 
-          {/* Personal Information */}
           <section className="profile-section">
 
             <div className="section-heading">
@@ -113,7 +114,7 @@ function Profile() {
 
           </section>
 
-          {/* Academic Information */}
+
           <section className="profile-section">
 
             <div className="section-heading">
@@ -148,7 +149,7 @@ function Profile() {
 
         </div>
 
-        {/* Activity */}
+
         <section className="profile-activity">
 
           <h2>My Activity</h2>

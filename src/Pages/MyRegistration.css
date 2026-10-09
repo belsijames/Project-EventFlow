@@ -1,522 +1,478 @@
 * {
   box-sizing: border-box;
-}
-
-.my-registration-page {
-  min-height: 100vh;
-  background: #f7f5fc;
-  color: #292044;
-}
-
-/* ================= NAVBAR ================= */
-
-.registration-navbar {
-  height: 76px;
-  width: 100%;
-
-  padding: 0 60px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: #ffffff;
-
-  border-bottom: 1px solid #eeeaf7;
-
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.registration-logo {
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-
-  color: #30205c;
-
-  cursor: pointer;
-}
-
-.registration-logo span {
-  color: #8246d6;
-}
-
-.registration-nav-links {
-  display: flex;
-  align-items: center;
-
-  gap: 38px;
-
-  list-style: none;
-
   margin: 0;
   padding: 0;
 }
 
-.registration-nav-links li {
-  position: relative;
+.my-registration-container {
+  min-height: 100vh;
+  display: flex;
+  background: #f8f8ff;
+  font-family: "Poppins", Arial, sans-serif;
+  color: #17175c;
+}
 
-  padding: 29px 0;
+/* ================= SIDEBAR ================= */
 
-  color: #706880;
+.registration-sidebar {
+  width: 285px;
+  min-height: 100vh;
 
-  font-size: 14px;
-  font-weight: 600;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  padding: 38px 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111747 0%,
+      #10143d 100%
+    );
+
+  color: white;
+}
+
+/* LOGO */
+
+.registration-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 15px;
+
+  margin-bottom: 50px;
+
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.registration-logo span {
+  color: white;
+}
+
+/* MENU */
+
+.registration-menu {
+  list-style: none;
+}
+
+.registration-menu li {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+
+  padding: 15px 18px;
+
+  margin-bottom: 10px;
+
+  border-radius: 12px;
+
+  color: #dedfff;
+
+  font-size: 15px;
+  font-weight: 500;
 
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: 0.25s;
 }
 
-.registration-nav-links li:hover {
-  color: #7045c5;
+.registration-menu li span {
+  width: 24px;
+
+  font-size: 21px;
+
+  text-align: center;
 }
 
-.registration-nav-links li.active {
-  color: #7045c5;
+.registration-menu li:hover {
+  background: rgba(126, 63, 255, 0.20);
 }
 
-.registration-nav-links li.active::after {
-  content: "";
+.registration-menu .active-registration {
+  background:
+    linear-gradient(
+      90deg,
+      #7130ed,
+      #8b35ed
+    );
 
-  position: absolute;
-
-  bottom: 0;
-  left: 0;
-
-  width: 100%;
-  height: 3px;
-
-  border-radius: 5px;
-
-  background: linear-gradient(
-    90deg,
-    #635bff,
-    #b026ff
-  );
-}
-
-/* ================= CONTENT ================= */
-
-.registration-content {
-  width: min(1150px, 92%);
-
-  margin: 0 auto;
-
-  padding: 55px 0 70px;
-}
-
-/* ================= TITLE ================= */
-
-.registration-title {
-  margin-bottom: 32px;
-}
-
-.registration-title h1 {
-  margin: 0 0 8px;
-
-  font-size: 34px;
-  font-weight: 750;
-
-  color: #2d2052;
-}
-
-.registration-title p {
-  margin: 0;
-
-  font-size: 15px;
-
-  color: #817991;
-}
-
-/* ================= REGISTRATION LIST ================= */
-
-.registration-list {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 20px;
-}
-
-/* ================= EVENT CARD ================= */
-
-.registration-item {
-  width: 100%;
-
-  min-height: 190px;
-
-  display: flex;
-  align-items: stretch;
-
-  padding: 24px;
-
-  background: #ffffff;
-
-  border: 1px solid #ece8f5;
-
-  border-radius: 20px;
+  color: white;
 
   box-shadow:
-    0 8px 30px rgba(61, 39, 110, 0.08);
-
-  transition: 0.3s;
-}
-
-.registration-item:hover {
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 14px 38px rgba(61, 39, 110, 0.13);
-}
-
-/* ================= ICON ================= */
-
-.registration-event-icon {
-  width: 90px;
-  min-width: 90px;
-
-  height: 90px;
-
-  margin-right: 25px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  align-self: center;
-
-  border-radius: 18px;
-
-  background: linear-gradient(
-    135deg,
-    #eee9ff,
-    #f8eaff
-  );
-
-  font-size: 36px;
+    0 7px 20px rgba(105, 44, 245, 0.35);
 }
 
 /* ================= MAIN ================= */
 
 .registration-main {
-  flex: 1;
+  width: calc(100% - 285px);
 
-  min-width: 0;
+  margin-left: 285px;
+
+  min-height: 100vh;
+
+  padding: 30px 48px 50px;
 }
 
-/* ================= HEADING ================= */
+/* TOP BAR */
 
-.registration-heading {
+.registration-topbar {
+  height: 60px;
+
   display: flex;
-
-  align-items: flex-start;
   justify-content: space-between;
-
-  gap: 20px;
-}
-
-.event-type {
-  display: inline-block;
-
-  padding: 5px 11px;
-
-  border-radius: 20px;
-
-  background: #f0ebff;
-
-  color: #7148c3;
-
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.registration-heading h2 {
-  margin: 8px 0 0;
-
-  font-size: 21px;
-
-  color: #302052;
-}
-
-/* ================= STATUS ================= */
-
-.registered-status {
-  flex-shrink: 0;
-
-  padding: 8px 15px;
-
-  border-radius: 20px;
-
-  background: #e8f8ef;
-
-  color: #27834e;
-
-  font-size: 12px;
-
-  font-weight: 700;
-}
-
-/* ================= DETAILS ================= */
-
-.registration-details {
-  display: grid;
-
-  grid-template-columns:
-    1fr 1fr 1.5fr;
-
-  gap: 20px;
-
-  margin-top: 23px;
-
-  padding-top: 18px;
-
-  border-top: 1px solid #eeeaf5;
-}
-
-.detail {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 5px;
-
-  min-width: 0;
-}
-
-.detail-label {
-  font-size: 11px;
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.5px;
-
-  color: #9a92aa;
-}
-
-.detail-value {
-  font-size: 13px;
-
-  color: #625a72;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-/* ================= ACTION ================= */
-
-.registration-action {
-  display: flex;
-
-  justify-content: flex-end;
-
-  margin-top: 18px;
-}
-
-.registration-action button {
-  padding: 9px 19px;
-
-  border: none;
-
-  border-radius: 20px;
-
-  background: linear-gradient(
-    90deg,
-    #635bff,
-    #a52bff
-  );
-
-  color: #ffffff;
-
-  font-size: 12px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 5px 15px rgba(99, 91, 255, 0.25);
-
-  transition: 0.3s;
-}
-
-.registration-action button:hover {
-  transform: translateY(-2px);
-}
-
-/* ================= EXPLORE ================= */
-
-.explore-registration {
-  margin-top: 30px;
-
-  padding: 27px 30px;
-
-  display: flex;
-
   align-items: center;
-  justify-content: space-between;
 
-  gap: 30px;
-
-  border-radius: 20px;
-
-  background: linear-gradient(
-    120deg,
-    #eee9ff,
-    #f9edff
-  );
-
-  border: 1px solid #e6def8;
+  margin-bottom: 25px;
 }
 
-.explore-registration h2 {
-  margin: 0 0 7px;
-
-  font-size: 20px;
-
-  color: #36245d;
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 13px;
 }
 
-.explore-registration p {
-  margin: 0;
+.notification-icon {
+  font-size: 23px;
 
-  max-width: 650px;
+  color: #62618b;
 
-  color: #766d87;
-
-  font-size: 13px;
-
-  line-height: 1.6;
+  margin-right: 8px;
 }
 
-.explore-registration button {
-  flex-shrink: 0;
+.profile-circle {
+  width: 40px;
+  height: 40px;
 
-  padding: 12px 23px;
+  border-radius: 50%;
 
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius: 25px;
-
-  background: linear-gradient(
-    90deg,
-    #635bff,
-    #b026ff
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #7130ed,
+      #9b65f5
+    );
 
   color: white;
 
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.user-name {
+  color: #45446d;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dropdown-icon {
+  color: #77759b;
+
+  font-size: 13px;
+}
+
+/* ================= TITLE ================= */
+
+.registration-title {
+  margin-bottom: 30px;
+}
+
+.registration-title h1 {
+  font-size: 28px;
+
+  color: #17185d;
+
+  margin-bottom: 7px;
+}
+
+.registration-title p {
+  color: #77759c;
+
+  font-size: 14px;
+}
+
+/* ================= EVENT LIST ================= */
+
+.registered-events {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+/* EVENT CARD */
+
+.registered-event-card {
+  width: 100%;
+  min-height: 155px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+
+  padding: 25px 30px;
+
+  background: white;
+
+  border: 1px solid #eeeef8;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 5px 20px rgba(60, 50, 120, 0.06);
+
+  transition: 0.25s;
+}
+
+.registered-event-card:hover {
+  box-shadow:
+    0 8px 25px rgba(60, 50, 120, 0.10);
+}
+
+/* IMAGE */
+
+.registered-event-image {
+  width: 100px;
+  height: 100px;
+
+  flex-shrink: 0;
+
+  object-fit: cover;
+
+  border-radius: 13px;
+}
+
+/* EVENT INFO */
+
+.registered-event-info {
+  flex: 1;
+
+  min-width: 280px;
+}
+
+.registered-event-info h2 {
+  color: #17185d;
+
+  font-size: 18px;
+
+  margin-bottom: 12px;
+}
+
+.event-date-time {
+  color: #6f6d91;
+
   font-size: 13px;
 
-  font-weight: 600;
+  font-weight: 500;
+}
+
+.event-date-time span {
+  margin: 0 10px;
+
+  color: #9997b4;
+}
+
+/* STATUS */
+
+.event-status {
+  width: 150px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.confirmed-status {
+  padding: 10px 20px;
+
+  border-radius: 22px;
+
+  background: #e8f8ee;
+
+  color: #39a96b;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+/* BUTTON */
+
+.view-registration-btn {
+  width: 160px;
+  height: 50px;
+
+  border: 2px solid #9b7bf0;
+
+  border-radius: 13px;
+
+  background: white;
+
+  color: #6d43d9;
+
+  font-size: 14px;
+
+  font-weight: 700;
 
   cursor: pointer;
 
-  box-shadow:
-    0 7px 20px rgba(99, 91, 255, 0.25);
+  transition: 0.25s;
+}
+
+.view-registration-btn:hover {
+  background: #f1edff;
+
+  border-color: #7130ed;
+}
+
+/* LOADING */
+
+.registration-loading {
+  text-align: center;
+
+  padding: 100px 20px;
+
+  color: #77759b;
+
+  font-size: 14px;
+}
+
+/* EMPTY */
+
+.empty-registration {
+  padding: 60px;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 18px;
+
+  border: 1px solid #eeeef8;
+}
+
+.empty-registration h2 {
+  color: #17185d;
+
+  margin-bottom: 10px;
+}
+
+.empty-registration p {
+  color: #77759b;
+
+  font-size: 14px;
 }
 
 /* ================= RESPONSIVE ================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
 
-  .registration-navbar {
-    padding: 0 25px;
+  .registration-sidebar {
+    width: 230px;
   }
 
-  .registration-nav-links {
+  .registration-main {
+    width: calc(100% - 230px);
+
+    margin-left: 230px;
+
+    padding: 30px;
+  }
+
+  .registered-event-card {
     gap: 18px;
+
+    padding: 20px;
   }
 
-  .registration-details {
-    grid-template-columns: 1fr 1fr;
+  .event-status {
+    width: 120px;
   }
 
-  .location-detail {
-    grid-column: span 2;
+  .view-registration-btn {
+    width: 140px;
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 850px) {
 
-  .registration-navbar {
-    height: auto;
-
-    padding: 18px 20px;
-
-    flex-direction: column;
-
-    gap: 15px;
+  .registration-sidebar {
+    display: none;
   }
 
-  .registration-nav-links {
+  .registration-main {
     width: 100%;
 
-    justify-content: center;
+    margin-left: 0;
 
-    gap: 15px;
+    padding: 25px;
+  }
 
+  .registered-event-card {
     flex-wrap: wrap;
   }
 
-  .registration-nav-links li {
-    padding: 5px 0;
+  .registered-event-info {
+    min-width: 0;
   }
 
-  .registration-content {
-    padding-top: 35px;
+  .event-status {
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .registration-main {
+    padding: 20px 15px;
   }
 
   .registration-title h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
-  .registration-item {
+  .registered-event-card {
+    align-items: flex-start;
+
     flex-direction: column;
 
-    padding: 22px;
+    padding: 20px;
   }
 
-  .registration-event-icon {
-    margin: 0 0 18px;
-
-    align-self: flex-start;
+  .registered-event-image {
+    width: 100%;
+    height: 150px;
   }
 
-  .registration-heading {
-    flex-direction: column;
+  .registered-event-info {
+    width: 100%;
   }
 
-  .registration-details {
-    grid-template-columns: 1fr;
-  }
-
-  .location-detail {
-    grid-column: span 1;
-  }
-
-  .detail-value {
-    white-space: normal;
-  }
-
-  .registration-action {
+  .event-status {
+    width: 100%;
     justify-content: flex-start;
   }
 
-  .explore-registration {
-    flex-direction: column;
-
-    align-items: flex-start;
-  }
-
-  .explore-registration button {
+  .view-registration-btn {
     width: 100%;
   }
+}
+
+.registered-event-image {
+  width: 20%;
+  height: 20%;
+  object-fit: cover;
+  display: block;
 }

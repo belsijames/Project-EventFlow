@@ -1,176 +1,297 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./MyRegistration.css";
 
 function MyRegistration() {
   const navigate = useNavigate();
 
-  const registrations = [
-    {
-      title: "Web Development Workshop",
-      type: "Workshop",
-      date: "10 October 2026",
-      time: "10:00 AM - 1:00 PM",
-      location: "Computer Science Department",
-      icon: "💻",
-    },
-    {
-      title: "Career Guidance",
-      type: "Seminar",
-      date: "15 October 2026",
-      time: "11:00 AM - 1:00 PM",
-      location: "Seminar Hall",
-      icon: "🎓",
-    },
-  ];
+  const [registrations, setRegistrations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/my-registrations")
+      .then((response) => response.json())
+      .then((data) => {
+        setRegistrations(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, []);
+
+  // Event image
+  const getEventImage = (eventName) => {
+    if (eventName.includes("Web Development")) {
+      return "/bootcamp.jpeg";
+    }
+
+    if (eventName.includes("Tech Talk")) {
+      return "/techtalk.jpeg";
+    }
+
+    if (eventName.includes("Creative Mind")) {
+      return "/mind.jpeg";
+    }
+
+    if (eventName.includes("Career")) {
+      return "/Career.jpeg";
+    }
+
+    if (eventName.includes("Science")) {
+      return "/innovation.jpeg";
+    }
+
+    if (eventName.includes("Communication")) {
+      return "/communication.jpeg";
+    }
+
+    return "/images/default-event.jpg";
+  };
+
+  // Event date and time
+  const getEventDetails = (eventName) => {
+    if (eventName.includes("Web Development")) {
+      return {
+        date: "20 Oct 2026",
+        time: "10:00 AM - 4:00 PM"
+      };
+    }
+
+    if (eventName.includes("Tech Talk")) {
+      return {
+        date: "10 Oct 2026",
+        time: "10:00 AM - 1:00 PM"
+      };
+    }
+
+    if (eventName.includes("Creative Mind")) {
+      return {
+        date: "18 Oct 2026",
+        time: "10:00 AM - 1:00 PM"
+      };
+    }
+
+    if (eventName.includes("Career")) {
+      return {
+        date: "22 Oct 2026",
+        time: "10:00 AM - 12:00 PM"
+      };
+    }
+
+    if (eventName.includes("Science")) {
+      return {
+        date: "25 Oct 2026",
+        time: "10:00 AM - 3:00 PM"
+      };
+    }
+
+    if (eventName.includes("Communication")) {
+      return {
+        date: "28 Oct 2026",
+        time: "10:00 AM - 1:00 PM"
+      };
+    }
+
+    return {
+      date: "Date not available",
+      time: "Time not available"
+    };
+  };
+
+  const handleViewDetails = (eventName) => {
+    if (eventName.includes("Web Development")) {
+      navigate("/webdevelopment");
+    } else if (eventName.includes("Tech Talk")) {
+      navigate("/techtalk");
+    } else if (eventName.includes("Creative Mind")) {
+      navigate("/creativemind");
+    } else if (eventName.includes("Career")) {
+      navigate("/careerguidance");
+    } else if (eventName.includes("Science")) {
+      navigate("/scienceexpo");
+    } else if (eventName.includes("Communication")) {
+      navigate("/communicationskills");
+    }
+  };
+
+
+  const eventImages = {
+  "Tech Talk 2026": "/techtalk.jpeg",
+  "Creative Minds Workshop": "/creative.jpeg",
+  "Web Development Bootcamp": "/bootcamp.jpeg",
+  "Career Guidance": "/Career.jpeg",
+  "Science and Innovation Expo": "/innovation.jpeg",
+  "Communication Skills Workshop": "/communication.jpeg"
+};
+
 
   return (
-    <div className="my-registration-page">
+    <div className="my-registration-container">
 
-      {/* Navbar */}
-      <nav className="registration-navbar">
+      {/* SIDEBAR */}
+     <aside className="ef-sidebar">
+     
+                     <div className="ef-brand">
+                         <div className="ef-brand-icon">◆</div>
+                         <span>EventFlow</span>
+                     </div>
+     
+                     <nav className="ef-navigation">
+     
+                         <Link to="/dashboard" className="ef-nav-item">
+                             <span className="ef-nav-icon">⌂</span>
+                             <span>Dashboard</span>
+                         </Link>
+     
+                         <Link to="/events" className="ef-nav-item">
+                             <span className="ef-nav-icon">▣</span>
+                             <span>Events</span>
+                         </Link>
+     
+                         <Link to="/learning" className="ef-nav-item">
+                             <span className="ef-nav-icon">▤</span>
+                             <span>Learning Path</span>
+                         </Link>
+     
+                         <Link to="/myregistration" className="ef-nav-item active">
+                             <span className="ef-nav-icon">◷</span>
+                             <span>My Registration</span>
+                         </Link>
+     
+                         <Link to="/profile" className="ef-nav-item">
+                             <span className="ef-nav-icon">♙</span>
+                             <span>Profile</span>
+                         </Link>
+     
+                     </nav>
+     
+                 </aside>
 
-        <div
-          className="registration-logo"
-          onClick={() => navigate("/dashboard")}
-        >
-          Event<span>Flow</span>
+      {/* MAIN CONTENT */}
+      <main className="registration-main">
+
+        {/* TOP HEADER */}
+        <div className="registration-topbar">
+
+          <div></div>
+
+          <div className="user-area">
+
+            <span className="notification-icon">
+              ♧
+            </span>
+
+            <div className="profile-circle">
+              B
+            </div>
+
+            <span className="user-name">
+              Belsi
+            </span>
+
+            <span className="dropdown-icon">
+              ▾
+            </span>
+
+          </div>
+
         </div>
 
-        <ul className="registration-nav-links">
-          <li onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </li>
-
-          <li onClick={() => navigate("/events")}>
-            Events
-          </li>
-
-          <li onClick={() => navigate("/learning")}>
-            Learning Path
-          </li>
-
-          <li className="active">
-            My Registration
-          </li>
-        </ul>
-
-      </nav>
-
-      {/* Page Content */}
-      <main className="registration-content">
-
+        {/* PAGE TITLE */}
         <div className="registration-title">
-          <h1>My Registration</h1>
+
+          <h1>My Registrations</h1>
 
           <p>
-            View and manage the events you have registered for.
+            View and manage your registered events
           </p>
+
         </div>
 
-        {/* Registration List */}
-        <div className="registration-list">
+        {/* LOADING */}
+        {loading && (
+          <div className="registration-loading">
+            Loading your registrations...
+          </div>
+        )}
 
-          {registrations.map((event, index) => (
+        {/* NO REGISTRATION */}
+        {!loading && registrations.length === 0 && (
+          <div className="empty-registration">
+            <h2>No Registrations Yet</h2>
+            <p>
+              You have not registered for any event yet.
+            </p>
+          </div>
+        )}
 
-            <div className="registration-item" key={index}>
+        {/* EVENT LIST */}
+        {!loading && registrations.length > 0 && (
 
-              {/* Icon */}
-              <div className="registration-event-icon">
-                {event.icon}
-              </div>
+          <div className="registered-events">
 
-              {/* Main Information */}
-              <div className="registration-main">
+            {registrations.map((registration) => {
 
-                <div className="registration-heading">
+              const eventDetails =
+                getEventDetails(registration.event_name);
 
-                  <div>
-                    <span className="event-type">
-                      {event.type}
-                    </span>
+              return (
+                <div
+                  className="registered-event-card"
+                  key={registration.id}
+                >
 
-                    <h2>{event.title}</h2>
+                  {/* IMAGE */}
+                 <img
+  src={eventImages[registration.event_name]}
+  alt={registration.event_name}
+  className="registered-event-image"
+/>
+
+                  {/* EVENT INFO */}
+                  <div className="registered-event-info">
+
+                    <h2>
+                      {registration.event_name}
+                    </h2>
+
+                    <p className="event-date-time">
+                      {eventDetails.date}
+                      <span>•</span>
+                      {eventDetails.time}
+                    </p>
+
                   </div>
 
-                  <span className="registered-status">
-                    Registered
-                  </span>
-
-                </div>
-
-                {/* Details */}
-                <div className="registration-details">
-
-                  <div className="detail">
-                    <span className="detail-label">
-                      Date
-                    </span>
-
-                    <span className="detail-value">
-                      {event.date}
+                  {/* STATUS */}
+                  <div className="event-status">
+                    <span className="confirmed-status">
+                      Confirmed
                     </span>
                   </div>
 
-                  <div className="detail">
-                    <span className="detail-label">
-                      Time
-                    </span>
-
-                    <span className="detail-value">
-                      {event.time}
-                    </span>
-                  </div>
-
-                  <div className="detail location-detail">
-                    <span className="detail-label">
-                      Location
-                    </span>
-
-                    <span className="detail-value">
-                      {event.location}
-                    </span>
-                  </div>
-
-                </div>
-
-                <div className="registration-action">
-
+                  {/* BUTTON */}
                   <button
-                    onClick={() => navigate("/events")}
+                    className="view-registration-btn"
+                    onClick={() =>
+                      handleViewDetails(
+                        registration.event_name
+                      )
+                    }
                   >
-                    View Event
+                    View Details
                   </button>
 
                 </div>
+              );
+            })}
 
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-        {/* Explore Section */}
-        <div className="explore-registration">
-
-          <div>
-            <h2>Discover More Events</h2>
-
-            <p>
-              Explore upcoming events and find new opportunities
-              to learn, connect and grow.
-            </p>
           </div>
 
-          <button
-            onClick={() => navigate("/events")}
-          >
-            Explore Events →
-          </button>
-
-        </div>
+        )}
 
       </main>
 

@@ -5,9 +5,17 @@
 .head{
   justify-content: center;
   height: 100vh;
-  background-color: #f5f2fa;
+  background-color: #f3e8f3;
   margin-left: 120px;
+ 
 }
+
+
+.board-bg{
+  width: 63rem;
+  margin-left: 186px;
+}
+
 .search-bar1 {
   display: flex;
   justify-content: center;
@@ -18,7 +26,7 @@
 }
 
 .search-bar1 input {
-  width: 70%;
+  width: 60%;
   height: 45px;
   padding: 0 20px;
   border: 1px solid #ddd6f3;
@@ -39,11 +47,13 @@
   color: #888;
 }
 .section{
-  margin-left: 195px;
+  margin-left: 265px;
   margin-top: -180px;
 }
 .section p{
   margin-top: 20px;
+  line-height: 1.5;
+ font-size: 20px;
 }
 
 .event-cards{
@@ -52,37 +62,39 @@
  align-items: center;
  gap: 25px;
  margin: 40px;
- margin-top: 150px;
- margin-left: 150px;
+ transform: translateY(70px);
+ margin-left: 160px;
  
 }
 .event-card{
   background-color:white;
   border: 1px solid #d8d0e5;
-  width: 270px;
+  width: 230px;
   height: 240px;
-  margin-top: 5px;
+  margin-top: -15px;
   border-radius: 10px;
   box-shadow: 0 6px 20px rgba(50, 20, 95, 0.15);
 }
 .event-card p{
-  margin-left: 20px;
+  margin-left: 30px;
   margin-top: 15px;
 }
 .event-card h1{
-   margin-left: 20px;
+   margin-left: 40px;
   margin-top: 20px;
+  font-size: 30px;
 }
 .event-card h2{
-   margin-left: 20px;
+   margin-left: 30px;
   margin-top: 10px;
+  font-size: 22px;
 }
 .arrow{
   position: absolute;
   cursor: pointer;
   font-size: 34px;
   display: inline-flex;
- margin-left: 180px;
+ margin-left: 160px;
  margin-top: -35px;
  transition: 0.3s;
 }
@@ -90,7 +102,7 @@
   transform: translateX(5px);
 }
 .icon{
-  margin-left: 30px;
+  margin-left: 40px;
 }
 
 .mid{
@@ -148,54 +160,140 @@
   font-weight: 700;
   color: #582f6b;
 }
-.navbar1{
-  position: absolute;
-  top:-1px;
-  background-color: #2f123a;
-  height: 39.6rem;
-  color: white;
-}
-.sidebar li{
-  list-style: none;
-  margin-top: 25px;
-  font-size: 15px;
- 
-}
-.sidebar h1{
-  margin-top: 30px;
-  margin-left: 13px;
+/* =========================
+   EVENTFLOW SIDEBAR
+========================= */
+
+.ef-sidebar {
+    width: 260px !important;
+    height: 100vh !important;
+
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+
+    background: #1f0829 !important;
+
+    padding: 32px 20px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    color: #ffffff !important;
+
+    box-sizing: border-box !important;
 }
 
-.list-group-item:hover{
-  background-color:  #582f6b;
-  cursor: pointer;
-  border-radius: 10px;
-  width: 180px;
 
+/* BRAND */
+
+.ef-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 0 14px;
+    margin-bottom: 55px;
 }
-.list-group-item{
- padding: 8px 35px;
- margin-left: -2px;
- font-size: 10px;
+
+.ef-brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #32103f;
+
+    border-radius: 10px;
+
+    color: #ffffff;
 }
-.list-group-item svg{
-  margin-right: 8px;
+
+.ef-brand span {
+    color: #ffffff;
+
+    font-size: 27px;
+    font-weight: 700;
 }
-.logout{
-  margin-left: 10px;
-  font-size: 18px;
-  padding: 10px;
-  margin-top: 20px;
+
+
+/* NAVIGATION */
+
+.ef-navigation {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
 }
-.logout:hover{
-  background-color: #582f6b;
-  cursor: pointer;
-  border-radius: 10px;
+
+
+/* NAV ITEM */
+
+.ef-nav-item {
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 0 18px;
+
+    background: transparent !important;
+
+    color: #ffffff !important;
+
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: all 0.25s ease;
 }
-.logout svg{
-  margin-right: 8px;
+
+
+/* ICON */
+
+.ef-nav-icon {
+    width: 24px;
+
+    display: flex;
+    justify-content: center;
+
+    color: #ffffff;
 }
-.board-bg{
-  width: 67rem;
-  margin-left: 136px;
+
+
+/* HOVER */
+
+.ef-nav-item:hover {
+    background: #7c3aed !important;
+
+    color: #ffffff !important;
+
+    transform: translateX(3px);
+
+    box-shadow:
+        0 6px 20px rgba(124, 58, 237, 0.45);
 }
+
+
+/* ACTIVE / CLICKED */
+
+.ef-nav-item.active {
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #a855f7
+    ) !important;
+
+    color: #ffffff !important;
+
+    box-shadow:
+        0 8px 25px rgba(124, 58, 237, 0.5);
+}
+

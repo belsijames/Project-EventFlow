@@ -18,7 +18,9 @@ import "./Home.css";
                         </div>
                         <div className='log'>
                             <button className='btn' onClick={()=> window.location.href="/Login"}>Explore Events →</button>
-                        </div>
+                    
+                    </div>
+                  
                     </div>
                 </div>
             </div>

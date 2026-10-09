@@ -86,10 +86,10 @@
    
  margin-left: 80px;
   margin-top: -50px;
+
 }
 .btn{
   margin-left: 180px;
- 
 }
 .log button{
   position: absolute;
@@ -108,6 +108,7 @@
   box-shadow: 0 6px 20px rgba(99, 91, 255, 0.4);
  
 }
+
 
 button:hover{
   background: linear-gradient(90deg, #635bff, #b026ff);
