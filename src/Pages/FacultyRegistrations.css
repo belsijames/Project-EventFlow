@@ -1,0 +1,506 @@
+/* ===== Faculty Registrations Page ===== */
+
+.faculty-registrations-main {
+min-width: 0;
+background: #f7f5fc;
+padding: 28px;
+box-sizing: border-box;
+color: #332348;
+}
+
+/* ===== Top Header ===== */
+
+.faculty-registrations-main .faculty-topbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 20px;
+margin-bottom: 28px;
+}
+
+.faculty-registrations-main .faculty-topbar h2 {
+margin: 0 0 7px;
+font-size: 25px;
+color: #332348;
+font-weight: 700;
+}
+
+.faculty-registrations-main .faculty-topbar p {
+margin: 0;
+color: #898096;
+font-size: 13px;
+}
+
+/* ===== Banner ===== */
+
+.faculty-registration-banner {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 20px;
+padding: 32px;
+margin-bottom: 25px;
+border-radius: 20px;
+color: #ffffff;
+background: linear-gradient(120deg, #30204f 0%, #563583 55%, #8561b4 100%);
+box-shadow: 0 12px 30px rgba(65, 39, 105, 0.15);
+overflow: hidden;
+}
+
+.faculty-registration-banner p {
+margin: 0 0 12px;
+color: #e4d8f7;
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 2px;
+}
+
+.faculty-registration-banner h1 {
+margin: 0 0 10px;
+color: #ffffff;
+font-size: 28px;
+font-weight: 700;
+}
+
+.faculty-registration-banner span {
+color: #eee6f8;
+font-size: 13px;
+line-height: 1.7;
+}
+
+.faculty-registration-banner-icon {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+width: 78px;
+height: 78px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 22px;
+color: #ffffff;
+background: rgba(255, 255, 255, 0.13);
+font-size: 38px;
+}
+
+/* ===== Statistics Cards ===== */
+
+.faculty-registration-stats {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr));
+gap: 18px;
+margin-bottom: 26px;
+}
+
+.faculty-registration-stat {
+position: relative;
+min-width: 0;
+padding: 23px;
+border: 1px solid #ece5f5;
+border-radius: 17px;
+background: #ffffff;
+box-shadow: 0 6px 20px rgba(51, 35, 72, 0.045);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faculty-registration-stat:hover {
+transform: translateY(-3px);
+box-shadow: 0 10px 25px rgba(51, 35, 72, 0.09);
+}
+
+.faculty-registration-stat span {
+display: block;
+color: #7e738e;
+font-size: 12px;
+font-weight: 500;
+}
+
+.faculty-registration-stat h2 {
+margin: 14px 0 7px;
+color: #553581;
+font-size: 31px;
+font-weight: 700;
+}
+
+.faculty-registration-stat p {
+margin: 0;
+color: #9a91a6;
+font-size: 11px;
+}
+
+/* ===== Registration Table Container ===== */
+
+.faculty-registration-table-card {
+min-width: 0;
+padding: 25px;
+border: 1px solid #ece6f4;
+border-radius: 19px;
+background: #ffffff;
+box-shadow: 0 6px 22px rgba(51, 35, 72, 0.045);
+}
+
+/* ===== Table Heading ===== */
+
+.faculty-registration-heading {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 15px;
+}
+
+.faculty-registration-heading h2 {
+margin: 0 0 8px;
+color: #352447;
+font-size: 20px;
+font-weight: 700;
+}
+
+.faculty-registration-heading p {
+margin: 0;
+color: #92889f;
+font-size: 12px;
+line-height: 1.6;
+}
+
+/* ===== Search and Filter ===== */
+
+.faculty-registration-filters {
+display: flex;
+align-items: center;
+gap: 14px;
+margin: 24px 0 20px;
+}
+
+.faculty-registration-filters input,
+.faculty-registration-filters select {
+box-sizing: border-box;
+height: 45px;
+padding: 0 14px;
+border: 1px solid #e4dced;
+border-radius: 10px;
+outline: none;
+background: #ffffff;
+color: #443650;
+font-family: inherit;
+font-size: 12px;
+transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faculty-registration-filters input {
+flex: 1;
+min-width: 0;
+}
+
+.faculty-registration-filters input::placeholder {
+color: #aaa1b6;
+}
+
+.faculty-registration-filters select {
+width: 175px;
+cursor: pointer;
+}
+
+.faculty-registration-filters input:focus,
+.faculty-registration-filters select:focus {
+border-color: #7954ad;
+box-shadow: 0 0 0 3px rgba(121, 84, 173, 0.11);
+}
+
+/* ===== Responsive Table Wrapper ===== */
+
+.faculty-registration-table-wrapper {
+width: 100%;
+overflow-x: auto;
+border: 1px solid #eee9f4;
+border-radius: 12px;
+}
+
+/* ===== Registration Table ===== */
+
+.faculty-registration-table {
+width: 100%;
+min-width: 760px;
+border-collapse: collapse;
+text-align: left;
+}
+
+.faculty-registration-table thead {
+background: #f7f4fb;
+}
+
+.faculty-registration-table th {
+padding: 16px 14px;
+color: #7e708f;
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 0.8px;
+white-space: nowrap;
+border-bottom: 1px solid #eee8f5;
+}
+
+.faculty-registration-table td {
+padding: 17px 14px;
+color: #655970;
+font-size: 12px;
+border-bottom: 1px solid #f0edf5;
+vertical-align: middle;
+}
+
+.faculty-registration-table tbody tr {
+transition: background 0.2s ease;
+}
+
+.faculty-registration-table tbody tr:hover {
+background: #fcfaff;
+}
+
+.faculty-registration-table tbody tr:last-child td {
+border-bottom: none;
+}
+
+.faculty-registration-table td strong {
+display: block;
+margin-bottom: 5px;
+color: #39284b;
+font-size: 12px;
+font-weight: 650;
+}
+
+.faculty-registration-email {
+display: block;
+color: #9990a6;
+font-size: 10px;
+overflow-wrap: anywhere;
+}
+
+/* ===== Registration Status Labels ===== */
+
+.faculty-registration-status {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 7px 12px;
+border-radius: 30px;
+font-size: 10px;
+font-weight: 700;
+white-space: nowrap;
+}
+
+.faculty-registration-status.pending {
+color: #97640e;
+background: #fff3d6;
+}
+
+.faculty-registration-status.approved {
+color: #24784c;
+background: #e1f6e8;
+}
+
+.faculty-registration-status.rejected {
+color: #b53e50;
+background: #ffeaed;
+}
+
+/* ===== Approve and Reject Buttons ===== */
+
+.faculty-registration-actions {
+display: flex;
+align-items: center;
+gap: 7px;
+flex-wrap: wrap;
+}
+
+.faculty-registration-actions button {
+padding: 8px 11px;
+border: none;
+border-radius: 7px;
+font-family: inherit;
+font-size: 10px;
+font-weight: 650;
+white-space: nowrap;
+cursor: pointer;
+transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.faculty-registration-actions button:hover {
+transform: translateY(-1px);
+}
+
+.faculty-registration-approve {
+color: #ffffff;
+background: #69449a;
+}
+
+.faculty-registration-approve:hover {
+background: #503078;
+}
+
+.faculty-registration-reject {
+color: #b13b4d;
+background: #fff0f2;
+}
+
+.faculty-registration-reject:hover {
+background: #ffdee3;
+}
+
+/* ===== Empty Search Result ===== */
+
+.faculty-registration-empty {
+padding: 35px 15px !important;
+color: #91869f !important;
+text-align: center;
+font-size: 13px !important;
+}
+
+/* ===== Results Count ===== */
+
+.faculty-registration-count {
+margin: 17px 0 0;
+color: #958ba3;
+font-size: 11px;
+}
+
+/* ===== Responsive Design ===== */
+
+@media (max-width: 1200px) {
+.faculty-registration-stats {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.faculty-registrations-main {
+padding: 22px;
+}
+}
+
+@media (max-width: 768px) {
+.faculty-registrations-main {
+padding: 16px;
+}
+
+.faculty-registration-banner {
+padding: 23px;
+border-radius: 16px;
+}
+
+.faculty-registration-banner h1 {
+font-size: 23px;
+}
+
+.faculty-registration-banner-icon {
+width: 58px;
+height: 58px;
+border-radius: 16px;
+font-size: 28px;
+}
+
+.faculty-registration-table-card {
+padding: 18px;
+}
+
+.faculty-registration-filters {
+align-items: stretch;
+flex-direction: column;
+}
+
+.faculty-registration-filters input,
+.faculty-registration-filters select {
+width: 100%;
+}
+}
+
+@media (max-width: 480px) {
+.faculty-registration-stats {
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+
+.faculty-registration-stat {
+padding: 15px;
+border-radius: 13px;
+}
+
+.faculty-registration-stat h2 {
+font-size: 25px;
+}
+
+.faculty-registration-stat span {
+font-size: 11px;
+}
+
+.faculty-registration-stat p {
+font-size: 10px;
+}
+
+.faculty-registration-banner {
+padding: 19px;
+}
+
+.faculty-registration-banner h1 {
+font-size: 20px;
+}
+
+.faculty-registration-banner span {
+font-size: 11px;
+}
+
+.faculty-registration-banner-icon {
+width: 45px;
+height: 45px;
+font-size: 23px;
+}
+
+.faculty-registration-table-card {
+padding: 13px;
+}
+
+.faculty-registration-heading h2 {
+font-size: 18px;
+}
+}
+.faculty-sidebar .faculty-navigation {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+.faculty-sidebar .faculty-navigation button {
+display: flex;
+align-items: center;
+justify-content: flex-start;
+gap: 13px;
+width: 100%;
+min-height: 46px;
+padding: 12px 16px;
+box-sizing: border-box;
+border: none;
+border-radius: 10px;
+background: transparent;
+color: #d8cce8;
+font-family: inherit;
+font-size: 13px;
+font-weight: 500;
+text-align: left;
+white-space: nowrap;
+cursor: pointer;
+transition: background 0.2s ease, color 0.2s ease;
+}
+
+.faculty-sidebar .faculty-navigation button span:first-child {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+flex: 0 0 20px;
+width: 20px;
+font-size: 17px;
+}
+
+.faculty-sidebar .faculty-navigation button:hover,
+.faculty-sidebar .faculty-navigation button.active {
+color: #ffffff;
+background: #684493;
+}
+
+.faculty-sidebar .faculty-navigation button:focus-visible {
+outline: 2px solid #cbb3ef;
+outline-offset: 2px;
+}

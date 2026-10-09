@@ -28,6 +28,16 @@ import LearningMaterials from "./Pages/LearningMaterials";
 
 
 import AdminDashboard from "./Pages/AdminDashboard";
+import ManageEvents from "./Pages/ManageEvents";
+import ManageUsers from "./Pages/ManageUsers";
+import ManageRegistrations from "./Pages/ManageRegistrations";
+import ManageQuizzes from "./Pages/ManageQuizzes";
+import FacultyDashboard from "./Pages/FacultyDashboard";
+import FacultyManageEvents from "./Pages/FacultyManageEvents";
+import FacultyRegistrations from "./Pages/FacultyRegistrations";
+import FacultyManageQuizzes from "./Pages/FacultyManageQuizzes";
+import FacultyQuizResults from "./Pages/FacultyQuizResults";
+import FacultyProfile from "./Pages/FacultyProfile";
 
 
 
@@ -62,6 +72,19 @@ function App() {
 
 
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/events" element={<ManageEvents />} />
+          <Route path="/admin/users" element={<ManageUsers />} />
+          <Route path="/admin/registrations" element={<ManageRegistrations />}/>
+          <Route path="/admin/quizzes" element={<ManageQuizzes />} />
+          <Route path="/faculty" element={<FacultyDashboard />} />
+          <Route path="/faculty/events" element={<FacultyManageEvents />}/>
+          <Route path="/faculty/registrations" element={<FacultyRegistrations />}/>
+          <Route path="/faculty/quizzes" element={<FacultyManageQuizzes />}/>
+          <Route path="/faculty/results" element={<FacultyQuizResults />}/>
+          <Route path="/faculty/profile" element={<FacultyProfile />}/>
+
+
+          
     
         </Routes>
     

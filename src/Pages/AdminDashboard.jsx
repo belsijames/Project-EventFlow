@@ -20,14 +20,21 @@ const stats = [
 { icon: "📚", title: "Total Quizzes", value: "0" },
 ];
 
+
 const handleLogout = () => {
-localStorage.removeItem("currentUser");
-navigate("/");
+  const confirmLogout = window.confirm(
+    "Are you sure you want to logout?"
+  );
+
+  if (confirmLogout) {
+    localStorage.removeItem("currentUser");
+    navigate("/");
+  }
 };
+
 
 return ( <div className="admin-layout"> <aside className="admin-sidebar"> <div className="admin-brand"> <span className="admin-brand-icon">✦</span> <h2>EventFlow</h2> </div>
 
-```
     <p className="admin-menu-label">MAIN MENU</p>
 
     <nav className="admin-menu">
@@ -43,9 +50,15 @@ return ( <div className="admin-layout"> <aside className="admin-sidebar"> <div c
       ))}
     </nav>
 
-    <button className="admin-logout" onClick={handleLogout}>
-      <span>↪</span> Logout
-    </button>
+   
+<button
+  type="button"
+  className="admin-logout"
+  onClick={handleLogout}
+>
+  <span>↪</span> Logout
+</button>
+
   </aside>
 
   <main className="admin-main">

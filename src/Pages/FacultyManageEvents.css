@@ -1,0 +1,465 @@
+
+.faculty-events-main {
+  min-width: 0;
+}
+
+.faculty-events-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+  padding: 28px 30px;
+  border: 1px solid #e6dafa;
+  border-radius: 17px;
+  background: linear-gradient(115deg, #e9dfff, #f8f4ff 75%, #eae2fc);
+}
+
+.faculty-events-eyebrow {
+  color: #7953b7;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.faculty-events-banner h1 {
+  margin: 10px 0;
+  color: #34204f;
+  font-size: 27px;
+}
+
+.faculty-events-banner p {
+  margin: 0;
+  color: #827390;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.faculty-event-add {
+  flex-shrink: 0;
+  padding: 12px 17px;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(120deg, #8054c7, #57338f);
+  color: white;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 5px 13px #57338f25;
+}
+
+.faculty-event-add:hover {
+  background: #503080;
+}
+
+.faculty-event-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+  margin-bottom: 27px;
+}
+
+.faculty-event-stats article {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 98px;
+  padding: 19px;
+  border: 1px solid #ece6f4;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 17px #39205208;
+}
+
+.event-stat-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+.event-stat-symbol.purple {
+  background: #eee5ff;
+  color: #8054c2;
+}
+
+.event-stat-symbol.green {
+  background: #e2f7eb;
+  color: #289363;
+}
+
+.event-stat-symbol.orange {
+  background: #fff0d9;
+  color: #c7872b;
+}
+
+.faculty-event-stats p {
+  margin: 0 0 7px;
+  color: #91879e;
+  font-size: 12px;
+}
+
+.faculty-event-stats h2 {
+  margin: 0;
+  color: #342348;
+  font-size: 25px;
+}
+
+.faculty-events-table-card {
+  overflow: hidden;
+  border: 1px solid #ece6f4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 18px #39205208;
+}
+
+.faculty-events-table-heading {
+  padding: 23px 24px 17px;
+}
+
+.faculty-events-table-heading h2 {
+  margin: 0 0 7px;
+  color: #352449;
+  font-size: 18px;
+}
+
+.faculty-events-table-heading p {
+  margin: 0;
+  color: #91879e;
+  font-size: 12px;
+}
+
+.faculty-events-filters {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 20px;
+}
+
+.faculty-events-filters input,
+.faculty-events-filters select {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #e5dfef;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #423351;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.faculty-events-filters input {
+  flex: 1;
+  min-width: 0;
+}
+
+.faculty-events-filters select {
+  width: 160px;
+  cursor: pointer;
+}
+
+.faculty-events-filters input:focus,
+.faculty-events-filters select:focus {
+  border-color: #9670d6;
+  box-shadow: 0 0 0 3px #9670d61b;
+}
+
+.faculty-events-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.faculty-events-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.faculty-events-table thead {
+  background: #f8f5fc;
+}
+
+.faculty-events-table th {
+  padding: 15px 16px;
+  color: #817690;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.faculty-events-table td {
+  padding: 16px;
+  border-top: 1px solid #f0edf5;
+  color: #746982;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.faculty-events-table tbody tr:hover {
+  background: #fcfaff;
+}
+
+.faculty-events-table td strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #38294d;
+  font-size: 12px;
+}
+
+.faculty-event-location {
+  display: block;
+  max-width: 190px;
+  color: #9b91a8;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.faculty-event-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.faculty-event-status.published {
+  background: #e2f7eb;
+  color: #248451;
+}
+
+.faculty-event-status.draft {
+  background: #fff0d9;
+  color: #a9711e;
+}
+
+.faculty-event-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.faculty-event-actions button {
+  padding: 7px 9px;
+  border: none;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.faculty-event-edit {
+  background: #e9e2ff;
+  color: #6842a9;
+}
+
+.faculty-event-edit:hover {
+  background: #dcd0ff;
+}
+
+.faculty-event-delete {
+  background: #ffeded;
+  color: #c64d4d;
+}
+
+.faculty-event-delete:hover {
+  background: #ffdddd;
+}
+
+.faculty-event-empty {
+  padding: 35px 15px !important;
+  color: #958ba3 !important;
+  text-align: center;
+}
+
+/* ===== EVENT FORM MODAL ===== */
+
+.faculty-event-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: #21143499;
+  backdrop-filter: blur(5px);
+}
+
+.faculty-event-modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 26px;
+  border: 1px solid #ffffffb5;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 22px 65px #170b2e40;
+}
+
+.faculty-event-modal-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 23px;
+}
+
+.faculty-event-modal-heading h2 {
+  margin: 0 0 7px;
+  color: #352249;
+  font-size: 22px;
+}
+
+.faculty-event-modal-heading p {
+  margin: 0;
+  color: #92879f;
+  font-size: 12px;
+}
+
+.faculty-event-close {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 9px;
+  background: #f1ebfa;
+  color: #70568f;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.faculty-event-modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.faculty-event-modal form label {
+  margin-bottom: 8px;
+  color: #49365e;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.faculty-event-modal form input,
+.faculty-event-modal form select {
+  width: 100%;
+  min-height: 43px;
+  margin-bottom: 17px;
+  padding: 10px 12px;
+  border: 1px solid #e5deef;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #423351;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.faculty-event-modal form input:focus,
+.faculty-event-modal form select:focus {
+  border-color: #9670d6;
+  box-shadow: 0 0 0 3px #9670d61b;
+}
+
+.faculty-event-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.faculty-event-form-row > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.faculty-event-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 7px;
+  padding-top: 18px;
+  border-top: 1px solid #f0edf5;
+}
+
+.faculty-event-modal-actions button {
+  min-height: 40px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.faculty-event-cancel {
+  background: #f1edf6;
+  color: #6f637d;
+}
+
+.faculty-event-save {
+  background: linear-gradient(120deg, #8054c7, #57338f);
+  color: #fff;
+}
+
+.faculty-event-save:hover {
+  background: #503080;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .faculty-event-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .faculty-events-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 23px;
+  }
+
+  .faculty-event-add {
+    width: 100%;
+  }
+
+  .faculty-event-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .faculty-events-filters {
+    flex-direction: column;
+    padding: 0 15px 18px;
+  }
+
+  .faculty-events-filters select {
+    width: 100%;
+  }
+
+  .faculty-events-table {
+    min-width: 720px;
+  }
+
+  .faculty-event-modal {
+    padding: 21px 17px;
+  }
+
+  .faculty-event-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
