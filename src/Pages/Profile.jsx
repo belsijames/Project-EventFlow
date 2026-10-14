@@ -1,199 +1,473 @@
-import React from "react";
-import { Link } from "react-router-dom";
+
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 function Profile() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const [user, setUser] = useState({});
+  const [editing, setEditing] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    department: "",
+    year: "",
+    course: "",
+    interest: "",
+    learningMode: "",
+    skillLevel: "",
+    profileImage: "",
+  });
+
+  useEffect(() => {
+    let savedUser = {};
+
+    try {
+      savedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+      if (!savedUser || typeof savedUser !== "object") {
+        savedUser = {};
+      }
+    } catch {
+      savedUser = {};
+    }
+
+    if (!savedUser.name) {
+      savedUser.name = localStorage.getItem("userName") || "";
+    }
+
+    setUser(savedUser);
+
+    setFormData((previous) => ({
+      ...previous,
+      ...savedUser,
+      profileImage: savedUser.profileImage || "",
+    }));
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  // Select and preview profile photo
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setMessage("Please select a valid image.");
+      e.target.value = "";
+      return;
+    }
+
+    // Limit image size to 5 MB before processing.
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("Please choose an image smaller than 5 MB.");
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxSize = 400;
+
+        const scale = Math.min(
+          maxSize / image.width,
+          maxSize / image.height,
+          1
+        );
+
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          setMessage("Unable to process this image.");
+          return;
+        }
+
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        const compressedImage = canvas.toDataURL("image/jpeg", 0.78);
+
+        setFormData((previous) => ({
+          ...previous,
+          profileImage: compressedImage,
+        }));
+
+        setMessage("Photo selected. Click Save Changes to keep it.");
+      };
+
+      image.onerror = () => {
+        setMessage("Unable to load this image. Try another photo.");
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.onerror = () => {
+      setMessage("Unable to read this image. Please try again.");
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((previous) => ({
+      ...previous,
+      profileImage: "",
+    }));
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    setMessage("Photo removed. Click Save Changes to confirm.");
+  };
+
+  const handleSave = () => {
+    try {
+      const updatedUser = {
+        ...user,
+        ...formData,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (updatedUser.name) {
+        localStorage.setItem("userName", updatedUser.name);
+      }
+
+      setUser(updatedUser);
+      setFormData(updatedUser);
+      setEditing(false);
+      setMessage("Profile updated successfully!");
+    } catch (error) {
+      console.error("Profile save error:", error);
+      setMessage(
+        "Unable to save. The browser may be out of storage space. Try a smaller photo."
+      );
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: user.name || "",
+      email: user.email || "",
+      department: user.department || "",
+      year: user.year || "",
+      course: user.course || "",
+      interest: user.interest || "",
+      learningMode: user.learningMode || "",
+      skillLevel: user.skillLevel || "",
+      profileImage: user.profileImage || "",
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    setEditing(false);
+    setMessage("");
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("");
+  };
+
+  const profileFields = [
+    { label: "Full Name", name: "name", placeholder: "Enter your name" },
+    { label: "Email Address", name: "email", placeholder: "Enter your email" },
+    {
+      label: "Department",
+      name: "department",
+      placeholder: "Enter your department",
+    },
+    { label: "Year", name: "year", placeholder: "Enter your year" },
+    { label: "Course", name: "course", placeholder: "Enter your course" },
+    {
+      label: "Area of Interest",
+      name: "interest",
+      placeholder: "Enter your interest",
+    },
+    {
+      label: "Learning Mode",
+      name: "learningMode",
+      placeholder: "Enter your learning mode",
+    },
+    {
+      label: "Skill Level",
+      name: "skillLevel",
+      placeholder: "Enter your skill level",
+    },
+  ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    navigate("/Login");
+  };
 
   return (
     <div className="profile-page">
-
-      <aside className="ef-sidebar">
-     
-                     <div className="ef-brand">
-                         <div className="ef-brand-icon">◆</div>
-                         <span>EventFlow</span>
-                     </div>
-     
-                     <nav className="ef-navigation">
-     
-                         <Link to="/dashboard" className="ef-nav-item">
-                             <span className="ef-nav-icon">⌂</span>
-                             <span>Dashboard</span>
-                         </Link>
-     
-                         <Link to="/events" className="ef-nav-item">
-                             <span className="ef-nav-icon">▣</span>
-                             <span>Events</span>
-                         </Link>
-     
-                         <Link to="/learning" className="ef-nav-item">
-                             <span className="ef-nav-icon">▤</span>
-                             <span>Learning Path</span>
-                         </Link>
-     
-                         <Link to="/myregistration" className="ef-nav-item">
-                             <span className="ef-nav-icon">◷</span>
-                             <span>My Registration</span>
-                         </Link>
-     
-                         <Link to="/profile" className="ef-nav-item active">
-                             <span className="ef-nav-icon">♙</span>
-                             <span>Profile</span>
-                         </Link>
-     
-                     </nav>
-     
-                 </aside>
-      <main className="profile-content">
-
-        <div className="profile-title">
-          <h1>My Profile</h1>
-          <p>
-            Manage your profile and view your learning activity.
-          </p>
+      {/* SIDEBAR */}
+      <aside className="user-sidebar">
+        <div className="user-brand">
+          <div className="user-brand-icon">E</div>
+          <div>
+            <h2>EventFlow</h2>
+            <span>Learn. Explore. Grow.</span>
+          </div>
         </div>
 
-        <section className="profile-card">
+        <div className="user-sidebar-label">MAIN MENU</div>
 
-          <div className="profile-avatar">
-            <img src="profile.jpg"/>
-          </div>
+        <button className="user-nav-item" onClick={() => navigate("/Dashboard")}>
+          <span>▦</span> Dashboard
+        </button>
 
-          <div className="profile-main-info">
-            <h2>J. Mary Belsi</h2>
+        <button className="user-nav-item" onClick={() => navigate("/Events")}>
+          <span>✦</span> Explore Events
+        </button>
 
-            <p className="profile-role">
-              B.Sc. Computer Science Student
-            </p>
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/MyRegistration")}
+        >
+          <span>▣</span> My Registrations
+        </button>
 
-            <p className="profile-college">
-              Immaculate College for Women
-            </p>
-          </div>
+        <button className="user-nav-item" onClick={() => navigate("/learning")}>
+          <span>⌘</span> Learning Path
+        </button>
 
-          <button className="edit-profile-btn">
-            Edit Profile
+        <button className="user-nav-item" onClick={() => navigate("/my-quiz")}>
+          <span>✓</span> My Quiz
+        </button>
+
+        <button className="user-nav-item" onClick={() => navigate("/Reminder")}>
+          <span>♧</span> Reminders
+        </button>
+
+        <div className="user-sidebar-bottom">
+          <button
+            className="user-nav-item active"
+            onClick={() => navigate("/Profile")}
+          >
+            <span>⚙</span> My Profile
           </button>
 
-        </section>
-
-
-        <div className="profile-grid">
-
-          <section className="profile-section">
-
-            <div className="section-heading">
-              <h2>Personal Information</h2>
-            </div>
-
-            <div className="information-grid">
-
-              <div className="information-item">
-                <span>Name</span>
-                <strong>J. Mary Belsi</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Email</span>
-                <strong>marybelsi@example.com</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Department</span>
-                <strong>Computer Science</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Year</span>
-                <strong>Final Year</strong>
-              </div>
-
-            </div>
-
-          </section>
-
-
-          <section className="profile-section">
-
-            <div className="section-heading">
-              <h2>Academic Information</h2>
-            </div>
-
-            <div className="information-grid">
-
-              <div className="information-item">
-                <span>Course</span>
-                <strong>B.Sc. Computer Science</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Area of Interest</span>
-                <strong>MERN & Full Stack Development</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Learning Mode</span>
-                <strong>Online & Self Learning</strong>
-              </div>
-
-              <div className="information-item">
-                <span>Skill Level</span>
-                <strong>Intermediate</strong>
-              </div>
-
-            </div>
-
-          </section>
-
+          <button className="user-nav-item logout-item" onClick={handleLogout}>
+            <span>⇥</span> Logout
+          </button>
         </div>
+      </aside>
 
-
-        <section className="profile-activity">
-
-          <h2>My Activity</h2>
-
-          <div className="activity-cards">
-
-            <div className="activity-card">
-              <div className="activity-icon">🎓</div>
-              <div>
-                <h3>05</h3>
-                <p>Registered Events</p>
-              </div>
-            </div>
-
-            <div className="activity-card">
-              <div className="activity-icon">📚</div>
-              <div>
-                <h3>05</h3>
-                <p>Learning Topics</p>
-              </div>
-            </div>
-
-            <div className="activity-card">
-              <div className="activity-icon">🏆</div>
-              <div>
-                <h3>80%</h3>
-                <p>Quiz Performance</p>
-              </div>
-            </div>
-
-            <div className="activity-card">
-              <div className="activity-icon">⭐</div>
-              <div>
-                <h3>12</h3>
-                <p>Completed Activities</p>
-              </div>
-            </div>
-
+      {/* MAIN CONTENT */}
+      <main className="profile-main">
+        {/* TOP BAR */}
+        <div className="profile-topbar">
+          <div>
+            <p className="profile-eyebrow">YOUR PERSONAL SPACE</p>
+            <h1>My Profile</h1>
+            <p className="profile-subtitle">
+              Manage your personal information and learning preferences.
+            </p>
           </div>
 
+          <button
+            type="button"
+            className="profile-reminder-btn"
+            onClick={() => navigate("/Reminder")}
+          >
+            ♧ Reminders
+          </button>
+        </div>
+
+        {/* PROFILE BANNER */}
+        <section className="profile-banner">
+          <div className="profile-avatar">
+            {formData.profileImage ? (
+              <img src={formData.profileImage} alt="Profile" />
+            ) : (
+              <div className="profile-avatar-initials">
+                {getInitials(formData.name)}
+              </div>
+            )}
+          </div>
+
+          <div className="profile-banner-info">
+            <span className="profile-member-tag">EVENTFLOW MEMBER</span>
+            <h2>{formData.name || "Your Name"}</h2>
+            <p>{formData.email || "Add your email address"}</p>
+
+            <div className="profile-banner-tags">
+              <span>{formData.course || "Course not added"}</span>
+              <span>{formData.year || "Year not added"}</span>
+            </div>
+          </div>
+
+          <div className="profile-banner-icon">✦</div>
         </section>
 
-      </main>
+        {/* PROFILE DETAILS */}
+        <section className="profile-details-card">
+          <div className="profile-section-heading">
+            <div>
+              <h2>Personal Information</h2>
+              <p>Your account and educational details</p>
+            </div>
 
+            {!editing && (
+              <button
+                type="button"
+                className="profile-edit-btn"
+                onClick={() => {
+                  setEditing(true);
+                  setMessage("");
+                }}
+              >
+                ✎ Edit Profile
+              </button>
+            )}
+          </div>
+
+          {message && (
+            <div className="profile-message" role="status">
+              {message}
+            </div>
+          )}
+
+          {/* PHOTO EDITOR */}
+          {editing && (
+            <div className="profile-photo-editor">
+              <div className="profile-photo-preview">
+                {formData.profileImage ? (
+                  <img src={formData.profileImage} alt="Selected profile" />
+                ) : (
+                  <span>{getInitials(formData.name)}</span>
+                )}
+              </div>
+
+              <div className="profile-photo-controls">
+                <h3>Profile Photo</h3>
+                <p>Choose a photo from your computer.</p>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  id="profileImageInput"
+                  className="profile-image-input"
+                  onChange={handleImageChange}
+                />
+
+                <div className="profile-photo-buttons">
+                  <label
+                    htmlFor="profileImageInput"
+                    className="profile-choose-photo-btn"
+                  >
+                    📷 Choose Photo
+                  </label>
+
+                  {formData.profileImage && (
+                    <button
+                      type="button"
+                      className="profile-remove-photo-btn"
+                      onClick={handleRemoveImage}
+                    >
+                      Remove Photo
+                    </button>
+                  )}
+                </div>
+
+                <small>JPG, PNG or other image formats. Maximum 5 MB.</small>
+              </div>
+            </div>
+          )}
+
+          <div className="profile-fields-grid">
+            {profileFields.map((field) => (
+              <div className="profile-field" key={field.name}>
+                <label htmlFor={field.name}>{field.label}</label>
+
+                {editing ? (
+                  <input
+                    id={field.name}
+                    name={field.name}
+                    type={field.name === "email" ? "email" : "text"}
+                    placeholder={field.placeholder}
+                    value={formData[field.name] || ""}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <div className="profile-field-value">
+                    {formData[field.name] || "Not provided"}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {editing && (
+            <div className="profile-actions">
+              <button
+                type="button"
+                className="profile-cancel-btn"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="profile-save-btn"
+                onClick={handleSave}
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* ACCOUNT INFORMATION */}
+        <section className="profile-account-card">
+          <div className="profile-account-icon">♙</div>
+
+          <div className="profile-account-info">
+            <h3>Account Information</h3>
+            <p>
+              Your EventFlow account is ready for event registration and
+              learning activities.
+            </p>
+          </div>
+
+          <span className="profile-account-status">My Account</span>
+        </section>
+      </main>
     </div>
   );
 }

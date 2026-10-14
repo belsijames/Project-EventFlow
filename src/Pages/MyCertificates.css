@@ -1,0 +1,496 @@
+
+.my-cert-page {
+  min-height: 100vh;
+  padding: 38px;
+  background:
+    radial-gradient(circle at 5% 5%, #eee3ff 0, transparent 30%),
+    radial-gradient(circle at 95% 90%, #f4e6ff 0, transparent 28%),
+    #faf8fd;
+  color: #30203d;
+  font-family: Arial, sans-serif;
+}
+
+.my-cert-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 0 auto 32px;
+  max-width: 1200px;
+}
+
+.my-cert-eyebrow {
+  color: #8054a7;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.my-cert-heading h1 {
+  margin: 8px 0;
+  font-size: clamp(28px, 4vw, 38px);
+  color: #392047;
+}
+
+.my-cert-heading > div:first-child > p:last-child {
+  color: #776c80;
+  line-height: 1.6;
+}
+
+.my-cert-count {
+  min-width: 130px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #e4d6f1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 25px #4120540c;
+}
+
+.my-cert-count span {
+  display: block;
+  color: #6f4197;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.my-cert-count small {
+  color: #786987;
+  font-size: 12px;
+}
+
+.my-cert-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.my-cert-card {
+  position: relative;
+  padding: 25px;
+  overflow: hidden;
+  border: 1px solid #e7dcef;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 32px #4120540c;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.my-cert-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #593078, #b995d9, #d8bd8b);
+  content: "";
+}
+
+.my-cert-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px #41205418;
+}
+
+.my-cert-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-cert-seal {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  place-items: center;
+  border: 2px solid #c5a36d;
+  border-radius: 50%;
+  background: #fff9eb;
+  color: #936b2d;
+  font-size: 23px;
+}
+
+.my-cert-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #edf8f0;
+  color: #287443;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.my-cert-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2e9a54;
+}
+
+.my-cert-label {
+  margin-top: 22px;
+  color: #9674ae;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.my-cert-card h2 {
+  margin: 10px 0;
+  color: #41244f;
+  font-size: 23px;
+  line-height: 1.4;
+}
+
+.my-cert-recipient {
+  color: #7b7183;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.my-cert-recipient strong {
+  color: #57336b;
+}
+
+.my-cert-meta {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(0, 1.4fr);
+  gap: 12px;
+  margin-top: 22px;
+  padding: 17px 0;
+  border-top: 1px solid #eee7f3;
+  border-bottom: 1px solid #eee7f3;
+  font-size: 12px;
+}
+
+.my-cert-meta span {
+  color: #8a7e93;
+}
+
+.my-cert-meta strong {
+  overflow-wrap: anywhere;
+  color: #4b3458;
+  text-align: right;
+}
+
+.my-cert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.my-cert-actions button,
+.my-cert-download,
+.my-cert-error button {
+  min-height: 43px;
+  padding: 11px 15px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.my-cert-actions button:hover,
+.my-cert-download:hover {
+  transform: translateY(-1px);
+}
+
+.my-cert-view {
+  flex: 1;
+  border: 1px solid #d9c7e8 !important;
+  background: #f7f1fc;
+  color: #633c80;
+}
+
+.my-cert-view:hover {
+  background: #ece0f8;
+}
+
+.my-cert-download {
+  flex: 1;
+  background: #5c3276;
+  color: #fff;
+}
+
+.my-cert-download:hover {
+  background: #402052;
+}
+
+.my-cert-empty {
+  max-width: 650px;
+  margin: 65px auto;
+  padding: 45px 25px;
+  border: 1px dashed #d8c5e8;
+  border-radius: 22px;
+  background: #ffffffd9;
+  text-align: center;
+}
+
+.my-cert-award {
+  display: grid;
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0e4fa;
+  color: #704293;
+  font-size: 35px;
+}
+
+.my-cert-empty h2 {
+  color: #422750;
+}
+
+.my-cert-empty p {
+  color: #82758a;
+  line-height: 1.7;
+}
+
+.my-cert-message {
+  display: flex;
+  min-height: 65vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #624278;
+}
+
+.my-cert-spinner {
+  width: 35px;
+  height: 35px;
+  border: 4px solid #e9dff1;
+  border-top-color: #704293;
+  border-radius: 50%;
+  animation: my-cert-spin 0.8s linear infinite;
+}
+
+@keyframes my-cert-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.my-cert-error {
+  max-width: 900px;
+  margin: 0 auto 25px;
+  padding: 18px;
+  border: 1px solid #f0caca;
+  border-radius: 12px;
+  background: #fff3f3;
+  color: #9b3030;
+  overflow-wrap: anywhere;
+}
+
+.my-cert-error p {
+  line-height: 1.6;
+}
+
+.my-cert-error button {
+  background: #5c3276;
+  color: #fff;
+}
+
+.my-cert-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: #21132dcc;
+  backdrop-filter: blur(5px);
+}
+
+.my-cert-modal {
+  position: relative;
+  width: min(850px, 100%);
+  max-height: 95vh;
+  padding: 25px;
+  overflow-y: auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 25px 80px #0003;
+}
+
+.my-cert-close {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #f0e7f6;
+  color: #58336f;
+  cursor: pointer;
+  font-size: 25px;
+}
+
+.my-cert-preview {
+  padding: 12px;
+  border: 1px solid #c5a36d;
+  background: #fffdf8;
+}
+
+.my-cert-preview-inner {
+  position: relative;
+  min-height: 440px;
+  padding: 40px 20px;
+  border: 2px solid #71478c;
+  text-align: center;
+}
+
+.my-cert-preview-brand {
+  margin: 0;
+  color: #593174;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.my-cert-preview-subtitle {
+  margin-top: 7px;
+  color: #9681a0;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+.my-cert-preview h2 {
+  margin: 30px 0 12px;
+  color: #56336b;
+  font-size: clamp(21px, 4vw, 32px);
+}
+
+.my-cert-preview-line {
+  width: 100px;
+  height: 2px;
+  margin: 0 auto 22px;
+  background: #c5a36d;
+}
+
+.my-cert-preview-inner > p {
+  color: #786d7d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.my-cert-preview h3 {
+  margin: 15px 0;
+  color: #56336b;
+  font-size: clamp(22px, 4vw, 32px);
+  overflow-wrap: anywhere;
+}
+
+.my-cert-preview h4 {
+  color: #56336b;
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+
+.my-cert-preview-date,
+.my-cert-preview-id {
+  font-size: 11px !important;
+}
+
+.my-cert-signature {
+  width: 160px;
+  margin: 25px 0 0 auto;
+  color: #67546f;
+  font-size: 11px;
+}
+
+.my-cert-signature span {
+  display: block;
+  margin-bottom: 8px;
+  border-top: 1px solid #80698c;
+}
+
+.my-cert-signature small {
+  font-size: 10px;
+}
+
+.modal-download {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+@media (max-width: 750px) {
+  .my-cert-page {
+    padding: 22px 15px;
+  }
+
+  .my-cert-heading {
+    align-items: flex-start;
+  }
+
+  .my-cert-count {
+    min-width: 90px;
+    padding: 12px;
+  }
+
+  .my-cert-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .my-cert-card {
+    padding: 20px;
+  }
+
+  .my-cert-actions {
+    flex-direction: column;
+  }
+
+  .my-cert-actions button {
+    width: 100%;
+  }
+
+  .my-cert-preview-inner {
+    min-height: 400px;
+    padding: 35px 12px;
+  }
+}
+
+@media (max-width: 450px) {
+  .my-cert-heading {
+    flex-direction: column;
+  }
+
+  .my-cert-count {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .my-cert-count span {
+    font-size: 25px;
+  }
+
+  .my-cert-meta {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .my-cert-meta strong {
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .my-cert-modal-backdrop {
+    padding: 8px;
+  }
+
+  .my-cert-modal {
+    padding: 12px;
+  }
+}

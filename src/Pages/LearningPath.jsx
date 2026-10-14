@@ -57,19 +57,96 @@ function LearningPath() {
     },
   ];
 
+ let storedUser = {};
+
+  try {
+    storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  } catch (error) {
+    storedUser = {};
+  }
+
+  const userName =
+    storedUser.name ||
+    localStorage.getItem("userName") ||
+    "Student";
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("currentUser");
+    navigate("/Login");
+  };
+
   return (
     <div className="learningpath-page">
-      <nav className="learningpath-navbar">
-        <h2>EventFlow</h2>
-
-        <div className="learningpath-navlinks">
-          <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-          <button onClick={() => navigate("/events")}>Events</button>
-          <button onClick={() => navigate("/my-quiz")}>My Quiz</button>
-          <button onClick={() => navigate("/profile")}>Profile</button>
+      <aside className="user-sidebar">
+        <div className="user-brand">
+          <div className="user-brand-icon">E</div>
+          <div>
+            <h2>EventFlow</h2>
+            <span>Learn. Explore. Grow.</span>
+          </div>
         </div>
-      </nav>
 
+      
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Dashboard")}
+        >
+          <span>▦</span> Dashboard
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Events")}
+        >
+          <span>✦</span> Explore Events
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/MyRegistration")}
+        >
+          <span>▣</span> My Registrations
+        </button>
+
+        <button
+          className="user-nav-item active"
+          onClick={() => navigate("/learning")}
+        >
+          <span>⌘</span> Learning Path
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/my-quiz")}
+        >
+          <span>✓</span> My Quiz
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Reminder")}
+        >
+          <span>♧</span> Reminders
+        </button>
+
+        <div className="user-sidebar-bottom">
+          <button
+            className="user-nav-item"
+            onClick={() => navigate("/Profile")}
+          >
+            <span>⚙</span> My Profile
+          </button>
+
+          <button className="user-nav-item logout-item" onClick={handleLogout}>
+            <span>⇥</span> Logout
+          </button>
+        </div>
+      </aside>
+
+      
       <main className="learningpath-container">
         <section className="learningpath-hero">
           <div>
@@ -122,6 +199,7 @@ function LearningPath() {
             <p>Choose a topic and begin learning.</p>
           </div>
         </div>
+        
 
         <section className="learningpath-grid">
           {courses.map((course) => (

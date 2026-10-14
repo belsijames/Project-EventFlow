@@ -1,139 +1,294 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const menuItems = [
-{ icon: "📊", title: "Dashboard", path: "/admin" },
-{ icon: "🎉", title: "Manage Events", path: "/admin/events" },
-{ icon: "👥", title: "Manage Users", path: "/admin/users" },
-{ icon: "📝", title: "Registrations", path: "/admin/registrations" },
-{ icon: "📚", title: "Manage Quizzes", path: "/admin/quizzes" },
-];
-
-const stats = [
-{ icon: "🎉", title: "Total Events", value: "0" },
-{ icon: "👥", title: "Total Users", value: "0" },
-{ icon: "📝", title: "Registrations", value: "0" },
-{ icon: "📚", title: "Total Quizzes", value: "0" },
-];
-
-
-const handleLogout = () => {
-  const confirmLogout = window.confirm(
-    "Are you sure you want to logout?"
-  );
-
-  if (confirmLogout) {
-    localStorage.removeItem("currentUser");
-    navigate("/");
-  }
-};
-
-
-return ( <div className="admin-layout"> <aside className="admin-sidebar"> <div className="admin-brand"> <span className="admin-brand-icon">✦</span> <h2>EventFlow</h2> </div>
-
-    <p className="admin-menu-label">MAIN MENU</p>
-
-    <nav className="admin-menu">
-      {menuItems.map((item, index) => (
-        <button
-          key={item.title}
-          className={`admin-menu-item ${index === 0 ? "active" : ""}`}
-          onClick={() => navigate(item.path)}
-        >
-          <span>{item.icon}</span>
-          {item.title}
-        </button>
-      ))}
-    </nav>
-
-   
-<button
-  type="button"
-  className="admin-logout"
-  onClick={handleLogout}
->
-  <span>↪</span> Logout
-</button>
-
-  </aside>
-
-  <main className="admin-main">
-    <header className="admin-topbar">
-      <div>
-        <p className="admin-eyebrow">EVENTFLOW / ADMIN</p>
-        <h1>Admin Dashboard</h1>
-      </div>
-
-      <div className="admin-profile">
-        <div className="admin-avatar">A</div>
-        <div>
-          <strong>Administrator</strong>
-          <span>Admin Panel</span>
-        </div>
-      </div>
-    </header>
-
-    <section className="admin-welcome">
-      <div>
-        <p className="admin-welcome-tag">MANAGEMENT OVERVIEW</p>
-        <h2>Welcome to EventFlow!</h2>
-        <p>
-          Manage educational events, users, registrations and learning
-          activities from one place.
-        </p>
-      </div>
-      <div className="admin-welcome-icon">✦</div>
-    </section>
-
-    <section className="admin-stats">
-      {stats.map((stat) => (
-        <article className="admin-stat-card" key={stat.title}>
-          <div className="admin-stat-top">
-            <span>{stat.title}</span>
-            <div className="admin-stat-icon">{stat.icon}</div>
-          </div>
-          <h2>{stat.value}</h2>
-          <p>Overview summary</p>
-        </article>
-      ))}
-    </section>
-
-    <section className="admin-section">
-      <div className="admin-section-heading">
-        <div>
-          <p className="admin-eyebrow">QUICK ACCESS</p>
-          <h2>Management Centre</h2>
-        </div>
-        <span className="admin-section-note">Choose a section</span>
-      </div>
-
-      <div className="admin-management-grid">
-        {menuItems.slice(1).map((item) => (
-          <article className="admin-management-card" key={item.title}>
-            <div className="admin-management-icon">{item.icon}</div>
-            <h3>{item.title}</h3>
-            <p>View and manage {item.title.toLowerCase()}.</p>
-            <button onClick={() => navigate(item.path)}>
-              Open Section <span>→</span>
-            </button>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <footer className="admin-footer">
-      EventFlow · Smart Educational Event Management and Learning Path
-      Platform
-    </footer>
-  </main>
-</div>
-
-
+  const storedUser = JSON.parse(
+  localStorage.getItem("currentUser") ||
+  localStorage.getItem("user") ||
+  "{}"
 );
+
+const adminName =
+  storedUser.name ||
+  localStorage.getItem("userName") ||
+  "Admin";
+
+  const [statsData, setStatsData] = useState({
+    totalEvents: 0,
+    totalUsers: 0,
+    totalRegistrations: 0,
+    totalQuizzes: 0,
+  });
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/admin/dashboard-stats")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to fetch dashboard statistics");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setStatsData(data.stats);
+        }
+      })
+      .catch((error) => {
+        console.error("Dashboard statistics error:", error);
+      });
+  }, []);
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm(
+      "Are you sure you want to logout?"
+    );
+
+    if (confirmLogout) {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userName");
+      navigate("/");
+    }
+  };
+
+  return (
+    <div className="admin-dashboard">
+
+      {/* Sidebar */}
+      <aside className="admin-sidebar">
+        <div className="admin-logo">
+          <h2>EventFlow</h2>
+          <p>Admin Panel</p>
+        </div>
+
+        <nav className="admin-menu">
+          <div
+            className="admin-menu-item active"
+            onClick={() => navigate("/admin")}
+          >
+            <span>🏠</span>
+            <span>Dashboard</span>
+          </div>
+
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/events")}
+          >
+            <span>🎉</span>
+            <span>Manage Events</span>
+          </div>
+
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/users")}
+          >
+            <span>👥</span>
+            <span>Manage Users</span>
+          </div>
+
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/registrations")}
+          >
+            <span>📝</span>
+            <span>Registrations</span>
+          </div>
+
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/quizzes")}
+          >
+            <span>📚</span>
+            <span>Manage Quizzes</span>
+          </div>
+        </nav>
+
+        <div className="admin-sidebar-bottom">
+          <div
+            className="admin-menu-item admin-logout"
+            onClick={handleLogout}
+          >
+            <span>🚪</span>
+            <span>Logout</span>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="admin-main">
+
+        {/* Header */}
+        <div className="admin-topbar">
+          <div>
+            <h1>Admin Dashboard</h1>
+            <p>Manage your EventFlow platform</p>
+          </div>
+
+          <button
+            type="button"
+            className="admin-profile-btn"
+            onClick={() => navigate("/Profile")}
+          >
+            <span className="admin-profile-avatar">👤</span>
+            <span>My Profile</span>
+            <span>↗</span>
+          </button>
+        </div>
+
+        {/* Welcome Section */}
+        <div className="admin-welcome">
+          <div className="admin-welcome-content">
+            <span className="admin-welcome-label">
+              ADMIN CONTROL CENTER
+            </span>
+
+            <h2>Welcome Back, {adminName}!</h2>
+
+            <p>
+              Manage events, users, registrations and quizzes
+              from one place.
+            </p>
+          </div>
+
+          <div className="admin-welcome-icon">👑</div>
+        </div>
+
+        {/* Statistics - DIV tags only */}
+        <section className="admin-stats-section">
+          <div className="admin-section-heading">
+            <h2>Platform Overview</h2>
+            <p>Live statistics from your database</p>
+          </div>
+
+          <div className="admin-stats-grid">
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">🎉</div>
+              <div className="admin-stat-info">
+                <p>Total Events</p>
+                <h3>{statsData.totalEvents}</h3>
+              </div>
+            </div>
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">👥</div>
+              <div className="admin-stat-info">
+                <p>Total Users</p>
+                <h3>{statsData.totalUsers}</h3>
+              </div>
+            </div>
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">📝</div>
+              <div className="admin-stat-info">
+                <p>Registrations</p>
+                <h3>{statsData.totalRegistrations}</h3>
+              </div>
+            </div>
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">📚</div>
+              <div className="admin-stat-info">
+                <p>Total Quizzes</p>
+                <h3>{statsData.totalQuizzes}</h3>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Certificate Section */}
+        <section className="admin-certificate-section">
+          <div className="admin-certificate-icon">🏆</div>
+
+          <div className="admin-certificate-content">
+            <h2>Issue Certificates</h2>
+            <p>
+              Manage certificates for students who complete events
+              and learning activities.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="admin-primary-btn"
+            onClick={() => navigate("/IssueCertificate")}
+          >
+            Manage Certificates →
+          </button>
+        </section>
+
+        {/* Management Cards - DIV tags only */}
+        <section className="admin-management-section">
+          <div className="admin-section-heading">
+            <h2>Quick Management</h2>
+            <p>Access your administrative tools</p>
+          </div>
+
+          <div className="admin-management-grid">
+
+            <div
+              className="admin-management-card"
+              onClick={() => navigate("/admin/events")}
+            >
+              <div className="admin-management-icon">🎉</div>
+              <h3>Manage Events</h3>
+              <p>
+                Add new events, update event details and remove events.
+              </p>
+              <span className="admin-card-link">Manage Events →</span>
+            </div>
+
+            <div
+              className="admin-management-card"
+              onClick={() => navigate("/admin/users")}
+            >
+              <div className="admin-management-icon">👥</div>
+              <h3>Manage Users</h3>
+              <p>
+                View registered users and manage their information.
+              </p>
+              <span className="admin-card-link">Manage Users →</span>
+            </div>
+
+            <div
+              className="admin-management-card"
+              onClick={() => navigate("/admin/registrations")}
+            >
+              <div className="admin-management-icon">📝</div>
+              <h3>Registrations</h3>
+              <p>
+                View student registrations for available events.
+              </p>
+              <span className="admin-card-link">View Registrations →</span>
+            </div>
+
+            <div
+              className="admin-management-card"
+              onClick={() => navigate("/admin/quizzes")}
+            >
+              <div className="admin-management-icon">📚</div>
+              <h3>Manage Quizzes</h3>
+              <p>
+                Create quizzes, update questions and manage learning topics.
+              </p>
+              <span className="admin-card-link">Manage Quizzes →</span>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="admin-footer">
+          <p>© 2026 EventFlow. Smart Educational Event Management.</p>
+        </footer>
+
+      </main>
+    </div>
+  );
 }
 
 export default AdminDashboard;

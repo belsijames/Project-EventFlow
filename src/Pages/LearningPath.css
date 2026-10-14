@@ -6,6 +6,7 @@
   font-family: Arial, sans-serif;
 }
 
+/* NAVBAR */
 .learningpath-navbar {
   min-height: 75px;
   padding: 0 7%;
@@ -43,20 +44,34 @@
   color: #d9c4ff;
 }
 
+/* MAIN CONTAINER */
 .learningpath-container {
-  max-width: 1200px;
+  max-width: 1030px;
   margin: auto;
   padding: 35px 24px 60px;
+  margin-left: 290px;
+  margin-top: -1px;
 }
 
+/* HERO CARD - BACKGROUND IMAGE */
 .learningpath-hero {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 25px;
   padding: 38px;
   border-radius: 24px;
-  background: linear-gradient(120deg, #382253, #704ba0);
+
+  background:
+    linear-gradient(
+      100deg,
+      rgba(48, 22, 65, 0.92),
+      rgba(112, 75, 160, 0.72)
+    ),
+    url("../../public/image1.jpeg") center / cover no-repeat;
+
   color: white;
   box-shadow: 0 12px 30px rgba(55, 32, 85, 0.17);
 }
@@ -75,6 +90,7 @@
 .learningpath-hero h1 {
   font-size: 36px;
   margin: 15px 0;
+  color: white;
 }
 
 .learningpath-hero p:not(.learningpath-eyebrow) {
@@ -97,6 +113,7 @@
   background: #eee5ff;
 }
 
+/* HERO ICON */
 .learningpath-hero-icon {
   width: 135px;
   height: 135px;
@@ -110,6 +127,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* OVERVIEW CARDS */
 .learningpath-overview {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -146,6 +164,7 @@
   font-size: 13px;
 }
 
+/* SECTION HEADING */
 .learningpath-section-heading {
   margin-bottom: 22px;
 }
@@ -160,12 +179,14 @@
   margin: 0;
 }
 
+/* LEARNING GRID */
 .learningpath-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
 }
 
+/* LEARNING CARDS */
 .learningpath-card {
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid #e5daf7;
@@ -243,6 +264,7 @@
   font-size: 12px;
 }
 
+/* PROGRESS */
 .learningpath-progress-label {
   display: flex;
   justify-content: space-between;
@@ -268,6 +290,7 @@
   background: linear-gradient(90deg, #6842a5, #b59ae8);
 }
 
+/* TOPICS */
 .learningpath-topics {
   margin: 22px 0;
 }
@@ -291,6 +314,7 @@
   font-weight: bold;
 }
 
+/* BUTTONS */
 .learningpath-start-btn,
 .learningpath-quiz-btn {
   width: 100%;
@@ -329,7 +353,20 @@
   background: #f3edff;
 }
 
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .learningpath-container {
+    margin-left: 220px;
+    max-width: none;
+  }
+}
+
 @media (max-width: 750px) {
+  .learningpath-container {
+    margin-left: 0;
+    padding: 25px 18px 45px;
+  }
+
   .learningpath-hero {
     padding: 27px;
   }

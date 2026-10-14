@@ -79,6 +79,25 @@ function FacultyDashboard() {
           </button>
 
           <button
+  type="button"
+  className="faculty-nav-link"
+  onClick={() => goToPage("/faculty/issue-certificate")}
+>
+  <span className="faculty-nav-icon">▤</span>
+  Issue Certificate
+</button>
+
+ <button
+  type="button"
+  className="faculty-nav-link"
+  onClick={() => goToPage("/FacultyCertificate")}
+>
+  <span className="faculty-nav-icon">▤</span>
+  Certificate
+</button>
+
+
+          <button
             type="button"
             className="faculty-nav-link"
             onClick={() => goToPage("/faculty/profile")}

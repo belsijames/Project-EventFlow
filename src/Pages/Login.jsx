@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+const API = "http://localhost:5000/api/auth/login";
+
 function Login() {
   const navigate = useNavigate();
 
@@ -15,24 +17,29 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handle input changes
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     setError("");
   };
 
+  // Handle login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (
-      !formData.email.trim() ||
-      !formData.password ||
-      !formData.role
-    ) {
+    // Declare variables before using them
+    const email = formData.email.trim();
+    const password = formData.password;
+    const selectedRole = formData.role;
+
+    if (!email || !password.trim() || !selectedRole) {
       setError("Please fill all the fields.");
       return;
     }
@@ -40,50 +47,67 @@ function Login() {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email.trim(),
-            password: formData.password,
-            role: formData.role,
-          }),
-        }
-      );
+      const response = await fetch(API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          role: selectedRole,
+        }),
+      });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        setError(data.message || "Invalid login details.");
+      console.log("Backend response:", data);
+
+      if (!response.ok || data.success !== true) {
+        setError(data.message || "Invalid email or password.");
         return;
       }
 
-      // Save logged-in user
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(data.user)
-      );
+      // Get user details from backend
+      const user = data.user;
 
-      // Save token if backend returns one
-      if (data.token) {
-        localStorage.setItem("token", data.token);
+      if (!user || !user.role) {
+        setError("User details or role missing in backend response.");
+        return;
       }
 
-      // Role-based navigation
-      if (data.user.role === "Admin") {
-        navigate("/admin-dashboard");
-      } else if (data.user.role === "Faculty") {
-        navigate("/faculty-dashboard");
+      // Declare role before using it
+      const role = String(user.role).trim().toLowerCase();
+
+      // Verify selected role against database role
+      if (role !== selectedRole.toLowerCase()) {
+        setError("Please select the correct role for this account.");
+        return;
+      }
+
+      // Save logged-in user details
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      localStorage.setItem("userName", user.name || "");
+      localStorage.setItem("userRole", user.role);
+
+      console.log("Login successful. Role:", role);
+
+      // Navigate according to role
+      if (role === "admin") {
+        navigate("/admin", { replace: true });
+      } else if (role === "faculty") {
+        navigate("/faculty", { replace: true });
+      } else if (role === "user" || role === "student") {
+        navigate("/Dashboard", { replace: true });
       } else {
-        navigate("/dashboard");
+        setError("Unsupported account role: " + user.role);
       }
     } catch (err) {
+      console.error("Login error:", err);
+
       setError(
-        "Cannot connect to server. Please check your backend."
+        "Backend connect aagala. Node.js server running-aa check pannunga."
       );
     } finally {
       setLoading(false);
@@ -92,87 +116,117 @@ function Login() {
 
   return (
     <div className="login-page">
-      <img
-        src="/login-bg.jpeg"
-        alt="EventFlow Background"
-        className="login-background"
-      />
+      <div className="login-container">
 
-      <div className="login-overlay"></div>
+        {/* Login Form */}
+        <div className="login-form-section">
+          <h1>Welcome Back!</h1>
 
-      <div className="login-form">
-        <div className="login-header">
-          <h1>EventFlow</h1>
-          <h2>Welcome Back</h2>
           <p>
-            Login to continue managing and exploring events
+            Login to continue your EventFlow learning journey.
+          </p>
+
+          <form onSubmit={handleSubmit}>
+
+            {/* Email */}
+            <div className="login-input-group">
+              <label htmlFor="email">Email Address</label>
+
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="username"
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div className="login-input-group">
+              <label htmlFor="password">Password</label>
+
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+                required
+              />
+            </div>
+
+            {/* Role */}
+            <div className="login-input-group">
+              <label htmlFor="role">Login As</label>
+
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+              >
+                <option value="User">User / Student</option>
+                <option value="Faculty">Faculty</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+
+            {/* Forgot Password */}
+            <div className="login-forgot-password">
+              <span
+                onClick={() => navigate("/ForgotPassword")}
+              >
+                Forgot Password?
+              </span>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="login-error" role="alert">
+                {error}
+              </div>
+            )}
+
+            {/* Login Button */}
+            <button
+              type="submit"
+              className="login-submit-btn"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+          </form>
+
+          {/* Sign Up */}
+          <p className="login-signup-text">
+            Don't have an account?{" "}
+            <span onClick={() => navigate("/SignUp")}>
+              Sign Up
+            </span>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Email Address</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              value={formData.email}
-              onChange={handleChange}
-              autoComplete="email"
-              required
-            />
+        {/* Welcome Panel */}
+        <div className="login-welcome-section">
+          <h2>EventFlow</h2>
+
+          <p>
+            Smart Educational Event Management and Learning
+            Path Platform
+          </p>
+
+          <div className="login-welcome-decoration">
+            Learn. Participate. Grow.
           </div>
-
-          <div className="input-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Select Role</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="User">User</option>
-              <option value="Faculty">Faculty</option>
-              <option value="Admin">Admin</option>
-            </select>
-          </div>
-
-          <div className="forgot-password">
-            <button type="button" onClick={() => navigate("/forgot-password")} >
-              Forgot Password?
-            </button>
-          </div>
-
-          {error && (
-            <p className="login-error" role="alert">
-              {error}
-            </p>
-          )}
-
-          <button type="submit" className="login-btn" disabled={loading} >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        <div className="signup-link">
-          <span>Don't have an account?</span>
-          <button type="button" onClick={() => navigate("/signup")} >
-            Sign Up
-          </button>
         </div>
+
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import "./Home.css";
 
                         <div className='hero-content'>
                             <p>Explore • Learn • Connect • Grow</p>
-                            <h1>EventFlow</h1>
+                            <h1>Event Flow</h1>
                             <h2>Smart Educational Event<br></br> Management Platform</h2>
                             <p>Discover educational events, connect with opportunities, <br></br>and grow your skills - all in one place.</p>
 

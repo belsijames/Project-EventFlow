@@ -1,216 +1,637 @@
+
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import './Events.css';
-export default function Events() {
-    const [selectedCategory, setSelectedCategory] = useState("All");
+import { useNavigate } from "react-router-dom";
+import "./Events.css";
 
-    const events = [
-  {
-    id: 1,
-    title: "Tech Talk 2026",
-    category: "Seminar",
-    image: "/techtalk.jpeg"
-  },
+function Events() {
+  const navigate = useNavigate();
 
-  {
-    id: 2,
-    title: "Creative Minds Workshop",
-    category: "Workshop",
-    image: "/creative.jpeg"
-  },
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  {
-    id: 3,
-    title: "Web Development Bootcamp",
-    category: "Workshop",
-    image: "/bootcamp.jpeg"
-  },
+  let storedUser = {};
 
-  {
-    id: 4,
-    title: "Communication Skills Workshop",
-    category: "Workshop",
-    image: "/communication.jpeg"
+  try {
+    storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  } catch (error) {
+    storedUser = {};
   }
-];
-    return (
-        <>
-            
-             <aside className="ef-sidebar">
 
-    <div className="ef-brand">
-        <div className="ef-brand-icon">◆</div>
-        <span>EventFlow</span>
-    </div>
+  const userName =
+    storedUser.name ||
+    localStorage.getItem("userName") ||
+    "Student";
 
-    <nav className="ef-navigation">
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("currentUser");
+    navigate("/Login");
+  };
 
-        <Link to="/dashboard" className="ef-nav-item">
-            <span className="ef-nav-icon">⌂</span>
-            <span>Dashboard</span>
-        </Link>
+  // Search and category filtering
+  const matches = (title, category, location) => {
+    const search = searchTerm.toLowerCase().trim();
 
-        <Link to="/events" className="ef-nav-item active">
-            <span className="ef-nav-icon">▣</span>
-            <span>Events</span>
-        </Link>
+    const matchesSearch =
+      title.toLowerCase().includes(search) ||
+      category.toLowerCase().includes(search) ||
+      location.toLowerCase().includes(search);
 
-        <Link to="/learning" className="ef-nav-item">
-            <span className="ef-nav-icon">▤</span>
-            <span>Learning Path</span>
-        </Link>
+    const matchesCategory =
+      selectedCategory === "All" ||
+      selectedCategory === category;
 
-        <Link to="/myregistration" className="ef-nav-item">
-            <span className="ef-nav-icon">◷</span>
-            <span>My Registration</span>
-        </Link>
+    return matchesSearch && matchesCategory;
+  };
 
-        <Link to="/profile" className="ef-nav-item">
-            <span className="ef-nav-icon">♙</span>
-            <span>Profile</span>
-        </Link>
+  // Count matching events
+  const eventCount = [
+    matches("Tech Talk 2026", "Seminar", "College Auditorium"),
+    matches("Creative Minds Workshop", "Workshop", "Seminar Hall"),
+    matches("Web Development Bootcamp", "Workshop", "Computer Lab"),
+    matches("Career Guidance Session", "Seminar", "Conference Hall"),
+    matches("Science & Innovation Expo", "Exhibition", "Main Exhibition Hall"),
+    matches("Communication Skills Workshop", "Workshop", "Seminar Hall"),
+  ].filter(Boolean).length;
 
-    </nav>
+  return (
+    <div className="events-page">
 
-</aside>
-                   <div className="body">
+      {/* SIDEBAR */}
+      <div className="user-sidebar">
 
-                <div className="search-bar">
-                    <input type="text" placeholder="Search" style={{ padding: "20px", marginLeft: "-200px" }} />
+        <div className="user-brand">
+          <div className="user-brand-icon">E</div>
+
+          <div>
+            <h2>EventFlow</h2>
+            <span>Learn. Explore. Grow.</span>
+          </div>
+        </div>
+
+        <div className="user-sidebar-label">MAIN MENU</div>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Dashboard")}
+        >
+          <span>▦</span> Dashboard
+        </button>
+
+        <button
+          className="user-nav-item active"
+          onClick={() => navigate("/Events")}
+        >
+          <span>✦</span> Explore Events
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/MyRegistration")}
+        >
+          <span>▣</span> My Registrations
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/learning")}
+        >
+          <span>⌘</span> Learning Path
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/my-quiz")}
+        >
+          <span>✓</span> My Quiz
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Reminder")}
+        >
+          <span>♧</span> Reminders
+        </button>
+
+        <div className="user-sidebar-bottom">
+
+          <button
+            className="user-nav-item"
+            onClick={() => navigate("/Profile")}
+          >
+            <span>⚙</span> My Profile
+          </button>
+
+          <button
+            className="user-nav-item logout-item"
+            onClick={handleLogout}
+          >
+            <span>⇥</span> Logout
+          </button>
+
+        </div>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <div className="body">
+
+        {/* TOP BAR */}
+        <div className="events-topbar">
+
+          <input
+            type="search"
+            className="search-bar"
+            placeholder="Search events, categories or locations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search events"
+          />
+
+          <div className="user-top-actions">
+
+            <button
+              className="user-notification-btn"
+              title="Reminders"
+              onClick={() => navigate("/Reminder")}
+            >
+              🔔
+            </button>
+
+            <button
+              className="user-account"
+              onClick={() => navigate("/Profile")}
+            >
+              <div className="user-avatar">
+                <img src="/profile.jpg" alt="Profile" />
+              </div>
+
+              <div className="user-account-text">
+                <strong>{userName}</strong>
+                <span>Student / User</span>
+              </div>
+            </button>
+
+          </div>
+        </div>
+
+        {/* PAGE HEADING */}
+        <div className="events-heading-section">
+
+          <p className="events-eyebrow">
+            DISCOVER • PARTICIPATE • GROW
+          </p>
+
+          <h1 className="heading">Explore Events</h1>
+
+          <p className="middle">
+            Discover exciting events, build new skills and explore
+            opportunities to grow your knowledge.
+          </p>
+
+        </div>
+
+        {/* CATEGORY FILTERS */}
+        <div className="events-filter-section">
+
+          <div className="events-filter-heading">
+            <h2>Browse Categories</h2>
+            <span>{eventCount} events found</span>
+          </div>
+
+          <div className="category-buttons">
+
+            <button
+              type="button"
+              className={
+                selectedCategory === "All"
+                  ? "category-button active"
+                  : "category-button"
+              }
+              onClick={() => setSelectedCategory("All")}
+            >
+              All
+            </button>
+
+            <button
+              type="button"
+              className={
+                selectedCategory === "Workshop"
+                  ? "category-button active"
+                  : "category-button"
+              }
+              onClick={() => setSelectedCategory("Workshop")}
+            >
+              Workshop
+            </button>
+
+            <button
+              type="button"
+              className={
+                selectedCategory === "Seminar"
+                  ? "category-button active"
+                  : "category-button"
+              }
+              onClick={() => setSelectedCategory("Seminar")}
+            >
+              Seminar
+            </button>
+
+            <button
+              type="button"
+              className={
+                selectedCategory === "Exhibition"
+                  ? "category-button active"
+                  : "category-button"
+              }
+              onClick={() => setSelectedCategory("Exhibition")}
+            >
+              Exhibition
+            </button>
+
+          </div>
+        </div>
+
+        {/* EVENT CARDS */}
+        <div className="events-grid">
+
+          {/* 1. TECH TALK */}
+          {matches(
+            "Tech Talk 2026",
+            "Seminar",
+            "College Auditorium"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/techtalk.jpeg"
+                  alt="Tech Talk 2026"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Seminar
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Tech Talk 2026</h3>
+
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 10, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 10:00 AM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> College Auditorium</p>
                 </div>
 
-                <div className="heading">
-                    <h1>Educational Events</h1>
-                    <p>Explore all upcoming educational events</p>
-                </div>
-                <div className="btn-all">
-                    <a href="#" >All</a>
-                    <a href="#"  className={selectedCategory === "Workshop" ? "active-filter" : ""}
-  onClick={() => setSelectedCategory("Workshop")}>Workshop</a>
-                    <a href="#">Seminar</a>
-                    <a href="#">Webinar</a>
-                    <a href="#">Competition</a>
-                    <a href="#">Sort by:Latest</a>
-                </div>
-                <div className="middle">
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/techtalk")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
 
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/techtalk.jpeg" className="card-img-top" alt="techtalk" style={{ height: "10.5rem" }} />
-                        <div class="card-body">
-                            <h4 class="card-title">Tech Talk 2026</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Oct10,2026 • 10.00 AM <br />
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg> Collge Auditorium</p>
-
-                            <a href="/techtalk" class="btn btn-primary"
-                                 >View Details</a>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/creative.jpeg" class="card-img-top" alt="creative minds" />
-                        <div class="card-body">
-                            <h4 class="card-title">Creative Minds Workshop</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Oct 15,2026 • 2.00 PM <br /><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg> Seminar Hall</p>
-
-                            <a href="#" class="btn btn-primary" onClick={()=> window.location.href="/CreativeMind"}>View Details</a>
-                        </div>
-                    </div>
-
-
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/bootcamp.jpeg" class="card-img-top" alt="bootcamp" style={{ height: "10.5rem" }} />
-                        <div class="card-body">
-                            <h4 class="card-title">Web Development Bootcamp</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Oct 20,2026 • 9.00 AM <br /><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg> Computer Lab</p>
-
-                            <a href="#" class="btn btn-primary"  onClick={()=> window.location.href="/WebDevelopment"}>View Details</a>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div className="middle">
-
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/Career.jpeg" class="card-img-top" alt="career" style={{ height: "10.5rem" }} />
-                        <div class="card-body">
-                            <h4 class="card-title">Career Guidence Session</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Oct 25,2026 • 11.00 AM <br />
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg>Auditorium</p>
-
-                            <a href="#" class="btn btn-primary" onClick={()=> window.location.href="/CareerGuidance"}>View Details</a>
-                        </div>
-                    </div>
-
-
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/innovation.jpeg" class="card-img-top" alt="innovation" style={{ height: "10.5rem" }} />
-                        <div class="card-body">
-                            <h4 class="card-title">Science & Innovation Expo</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Oct 29,2026 • 10.00 AM <br /><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg>Main Ground</p>
-
-                            <a href="#" class="btn btn-primary" onClick={()=> window.location.href="/ScienceExpo"}>View Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card" style={{ width: "18rem" }}>
-                        <img src="/communication.jpeg" class="card-img-top" alt="communication" style={{ height: "10.5rem" }} />
-                        <div class="card-body">
-                            <h4 class="card-title">Communication Skills Workshop</h4>
-                            <p class="card-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar2-week" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                </svg>Nov 2,2026 • 2.00 PM <br /><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg> Seminar Hall</p>
-
-                            <a href="#" class="btn btn-primary" onClick={()=> window.location.href="/CommunicationSkills"}>View Details</a>
-                        </div>
-                    </div>
-
-
-                </div>
             </div>
+          )}
 
-        </>
-    )
+          {/* 2. CREATIVE MINDS */}
+          {matches(
+            "Creative Minds Workshop",
+            "Workshop",
+            "Seminar Hall"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/creative.jpeg"
+                  alt="Creative Minds Workshop"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Workshop
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Creative Minds Workshop</h3>
+
+                
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 15, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 02:00 PM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> Seminar Hall</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/CreativeMind")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* 3. WEB DEVELOPMENT */}
+          {matches(
+            "Web Development Bootcamp",
+            "Workshop",
+            "Computer Lab"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/bootcamp.jpeg"
+                  alt="Web Development Bootcamp"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Workshop
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Web Development Bootcamp</h3>
+
+
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 20, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 09:00 AM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> Computer Lab</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/WebDevelopment")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* 4. CAREER GUIDANCE */}
+          {matches(
+            "Career Guidance Session",
+            "Seminar",
+            "Conference Hall"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/Career.jpeg"
+                  alt="Career Guidance Session"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Seminar
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Career Guidance Session</h3>
+
+
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 22, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 10:30 AM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> Conference Hall</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/CareerGuidance")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* 5. SCIENCE EXPO */}
+          {matches(
+            "Science & Innovation Expo",
+            "Exhibition",
+            "Main Exhibition Hall"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/innovation.jpeg"
+                  alt="Science and Innovation Expo"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Exhibition
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Science &amp; Innovation Expo</h3>
+
+
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 25, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 10:00 AM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> Main Exhibition Hall</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/ScienceExpo")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* 6. COMMUNICATION SKILLS */}
+          {matches(
+            "Communication Skills Workshop",
+            "Workshop",
+            "Seminar Hall"
+          ) && (
+            <div className="card">
+
+              <div className="event-image-wrapper">
+                <img
+                  src="/communication.jpeg"
+                  alt="Communication Skills Workshop"
+                  className="event-image"
+                />
+
+                <span className="event-category-badge">
+                  Workshop
+                </span>
+              </div>
+
+              <div className="card-body">
+                <h3>Communication Skills Workshop</h3>
+
+
+                <div className="event-details">
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-calendar3" viewBox="0 0 16 16">
+  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+</span> October 28, 2026</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+</svg>
+</span> 11:00 AM</p>
+                  <p><span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="darkblue" class="bi bi-geo-alt" viewBox="0 0 16 16">
+  <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+  <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+</svg>
+</span> Seminar Hall</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="event-view-button"
+                  onClick={() => navigate("/CommunicationSkills")}
+                >
+                  View Details <span>→</span>
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* NO EVENTS FOUND */}
+          {eventCount === 0 && (
+            <div className="no-events">
+              <h3>No events found</h3>
+
+              <p>
+                Try another search term or choose a different category.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("All");
+                }}
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+
+        </div>
+        <div className="user-dashboard-footer">
+
+          <span>© 2026 EventFlow</span>
+
+          <span>
+            Smart Educational Event Management & Learning Platform
+          </span>
+
+        </div>
+
+
+      </div>
+    </div>
+  );
 }
+
+export default Events;

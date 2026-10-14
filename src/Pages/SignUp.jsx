@@ -3,53 +3,53 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
+const initialForm = {
+  name: "",
+  email: "",
+  department: "",
+  designation: "",
+  year: "",
+  course: "",
+  interest: "",
+  learningMode: "Online",
+  skillLevel: "Beginner",
+  password: "",
+  confirmPassword: "",
+  role: "User",
+};
+
 function SignUp() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    department: "",
-    year: "",
-    course: "",
-    interest: "",
-    learningMode: "",
-    skillLevel: "",
-    password: "",
-    confirmPassword: "",
-    role: "User",
-  });
-
+  const [formData, setFormData] = useState(initialForm);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setError("");
+    setMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
 
-    if (
-      !formData.name.trim() ||
-      !formData.email.trim() ||
-      !formData.department ||
-      !formData.year ||
-      !formData.course.trim() ||
-      !formData.interest.trim() ||
-      !formData.learningMode ||
-      !formData.skillLevel ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      alert("Please fill all the details.");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
+    if (formData.password.length < 6) {
+      setError("Password must contain at least 6 characters.");
       return;
     }
 
@@ -67,11 +67,22 @@ function SignUp() {
             name: formData.name.trim(),
             email: formData.email.trim(),
             department: formData.department,
-            year: formData.year,
-            course: formData.course.trim(),
-            interest: formData.interest.trim(),
-            learningMode: formData.learningMode,
-            skillLevel: formData.skillLevel,
+            designation:
+              formData.role === "Faculty"
+                ? formData.designation
+                : "",
+            year: formData.role === "User" ? formData.year : "",
+            course: formData.role === "User" ? formData.course : "",
+            interest:
+              formData.role === "User" ? formData.interest : "",
+            learningMode:
+              formData.role === "User"
+                ? formData.learningMode
+                : "",
+            skillLevel:
+              formData.role === "User"
+                ? formData.skillLevel
+                : "",
             password: formData.password,
             role: formData.role,
           }),
@@ -81,18 +92,18 @@ function SignUp() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Registration failed.");
+        setError(data.message || "Signup failed.");
         return;
       }
 
-      alert("Account created successfully!");
+      setFormData(initialForm);
+      setMessage("Account created successfully! Please login.");
 
-      navigate("/login");
-    } catch (error) {
-      console.error("Signup error:", error);
-
-      alert(
-        "Cannot connect to server. Please check your backend."
+      setTimeout(() => navigate("/login"), 1200);
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError(
+        "Cannot connect to server. Check whether backend is running."
       );
     } finally {
       setLoading(false);
@@ -103,7 +114,7 @@ function SignUp() {
     <div className="signup-page">
       <img
         src="/login-bg.jpeg"
-        alt="EventFlow Background"
+        alt="EventFlow background"
         className="signup-background"
       />
 
@@ -112,190 +123,44 @@ function SignUp() {
       <div className="signup-form">
         <div className="signup-header">
           <h1>EventFlow</h1>
-
-          <h2>Create Account</h2>
-
+          <h2>Create Your Account</h2>
           <p>
-            Create your account to explore and manage educational events
+            {formData.role === "Faculty"
+              ? "Register to manage educational events and quizzes"
+              : formData.role === "Admin"
+              ? "Register your administrator account"
+              : "Join EventFlow to explore events and learning paths"}
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Row 1 */}
-          <div className="input-row">
-            <div className="input-group">
-              <label>Full Name</label>
-
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter your full name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Email Address</label>
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="input-group">
+            <label>Full Name *</label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter your full name"
+              autoComplete="name"
+              required
+            />
           </div>
 
-          {/* Row 2 */}
-          <div className="input-row">
-            <div className="input-group">
-              <label>Department</label>
-
-              <select
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Department</option>
-                <option value="Computer Science">
-                  Computer Science
-                </option>
-                <option value="EEE">EEE</option>
-                <option value="ECE">ECE</option>
-                <option value="Commerce">Commerce</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Physics">Physics</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Year</label>
-
-              <select
-                name="year"
-                value={formData.year}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Year</option>
-                <option value="I Year">I Year</option>
-                <option value="II Year">II Year</option>
-                <option value="III Year">III Year</option>
-                <option value="Final Year">Final Year</option>
-              </select>
-            </div>
+          <div className="input-group">
+            <label>Email Address *</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              autoComplete="email"
+              required
+            />
           </div>
 
-          {/* Row 3 */}
-          <div className="input-row">
-            <div className="input-group">
-              <label>Course</label>
-
-              <input
-                type="text"
-                name="course"
-                placeholder="Eg: B.Sc. Computer Science"
-                value={formData.course}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Area of Interest</label>
-
-              <input
-                type="text"
-                name="interest"
-                placeholder="Eg: MERN & Full Stack"
-                value={formData.interest}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Row 4 */}
-          <div className="input-row">
-            <div className="input-group">
-              <label>Learning Mode</label>
-
-              <select
-                name="learningMode"
-                value={formData.learningMode}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Learning Mode</option>
-                <option value="Online & Self Learning">
-                  Online & Self Learning
-                </option>
-                <option value="Classroom Learning">
-                  Classroom Learning
-                </option>
-                <option value="Online Learning">
-                  Online Learning
-                </option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Skill Level</label>
-
-              <select
-                name="skillLevel"
-                value={formData.skillLevel}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Skill Level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Row 5 */}
-          <div className="input-row">
-            <div className="input-group">
-              <label>Password</label>
-
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleChange}
-                autoComplete="new-password"
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Confirm Password</label>
-
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                autoComplete="new-password"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Role */}
-          <div className="input-group full-width">
-            <label>Role</label>
-
+          <div className="input-group">
+            <label>Select Role *</label>
             <select
               name="role"
               value={formData.role}
@@ -303,10 +168,153 @@ function SignUp() {
               required
             >
               <option value="User">User</option>
-              <option value="Faculty">Faculty</option>
-              <option value="Admin">Admin</option>
+<option value="Faculty">Faculty</option>
+<option value="Admin">Admin</option>
             </select>
           </div>
+
+          <div className="input-group">
+            <label>Department *</label>
+            <input
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              placeholder="Enter your department"
+              required
+            />
+          </div>
+
+          {formData.role === "User" && (
+            <>
+              <div className="input-group">
+                <label>Year *</label>
+                <select
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select year</option>
+                  <option value="First Year">First Year</option>
+                  <option value="Second Year">Second Year</option>
+                  <option value="Third Year">Third Year</option>
+                  <option value="Final Year">Final Year</option>
+                </select>
+              </div>
+
+              <div className="input-group">
+                <label>Course *</label>
+                <input
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  placeholder="Enter your course"
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Area of Interest</label>
+                <input
+                  name="interest"
+                  value={formData.interest}
+                  onChange={handleChange}
+                  placeholder="MERN & Full Stack Development"
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Learning Mode</label>
+                <select
+                  name="learningMode"
+                  value={formData.learningMode}
+                  onChange={handleChange}
+                >
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                  <option value="Online & Self Learning">
+                    Online & Self Learning
+                  </option>
+                </select>
+              </div>
+
+              <div className="input-group">
+                <label>Skill Level</label>
+                <select
+                  name="skillLevel"
+                  value={formData.skillLevel}
+                  onChange={handleChange}
+                >
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+            </>
+          )}
+
+          {formData.role === "Faculty" && (
+            <div className="input-group">
+              <label>Designation *</label>
+              <select
+                name="designation"
+                value={formData.designation}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select designation</option>
+                <option value="Assistant Professor">
+                  Assistant Professor
+                </option>
+                <option value="Associate Professor">
+                  Associate Professor
+                </option>
+                <option value="Professor">Professor</option>
+                <option value="HOD">Head of Department (HOD)</option>
+                <option value="Guest Faculty">Guest Faculty</option>
+              </select>
+            </div>
+          )}
+
+          <div className="input-group">
+            <label>Create Password *</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create a password"
+              minLength={6}
+              autoComplete="new-password"
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Confirm Password *</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              minLength={6}
+              autoComplete="new-password"
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="signup-error" role="alert">
+              {error}
+            </p>
+          )}
+
+          {message && (
+            <p className="signup-success" role="status">
+              {message}
+            </p>
+          )}
 
           <button
             type="submit"
@@ -318,8 +326,7 @@ function SignUp() {
         </form>
 
         <div className="login-link">
-          Already have an account?
-
+          <span>Already have an account? </span>
           <button
             type="button"
             onClick={() => navigate("/login")}

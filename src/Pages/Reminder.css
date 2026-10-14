@@ -4,49 +4,17 @@
   background: linear-gradient(135deg, #f8f5ff, #eee7ff);
   font-family: Arial, sans-serif;
   color: #30204f;
+  margin-top: -6px;
 }
 
-.reminder-navbar {
-  min-height: 75px;
-  padding: 0 7%;
-  background: #30204f;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  box-shadow: 0 4px 18px rgba(36, 20, 62, 0.2);
-}
-
-.reminder-navbar h2 {
-  margin: 0;
-  letter-spacing: 1px;
-}
-
-.reminder-nav-links {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.reminder-nav-links button {
-  border: none;
-  background: transparent;
-  color: white;
-  padding: 10px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.reminder-nav-links button:hover {
-  color: #d8c4ff;
-}
 
 .reminder-container {
-  max-width: 1050px;
+  max-width: 1010px;
   margin: 0 auto;
   padding: 55px 24px;
+  margin-left: 300px;
+
+ 
 }
 
 .reminder-subtitle {
@@ -55,6 +23,7 @@
   font-weight: bold;
   letter-spacing: 3px;
   margin-bottom: 10px;
+  margin-top: -90px;
 }
 
 .reminder-container h1 {
@@ -104,6 +73,7 @@
 
 .reminder-info {
   flex: 1;
+  width: 770px;
 }
 
 .reminder-type {
@@ -158,5 +128,101 @@
 
   .reminder-container h1 {
     font-size: 28px;
+  }
+}
+
+
+/* Premium My Profile Button */
+.reminder-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-left: auto;
+  margin-right: -30px;
+  margin-top: -20px;
+  margin-bottom: 22px;
+  padding: 8px 14px 8px 8px;
+  background: #ffffff;
+  color: #2f123a;
+  border: 1px solid #e5d9eb;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(47, 18, 58, 0.05);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+  transform: none;
+}
+
+.reminder-profile-avatar {
+  width: 39px;
+  height: 39px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: #2f123a;
+  color: #ffffff;
+  font-size: 18px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.reminder-profile-text {
+  color: inherit;
+  white-space: nowrap;
+}
+
+.reminder-profile-arrow {
+  color: #8c7199;
+  font-size: 16px;
+  transition: color 0.25s ease;
+}
+
+.reminder-profile-btn:hover {
+  background: #2f123a;
+  border-color: #2f123a;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(47, 18, 58, 0.22);
+  transform: none;
+}
+
+.reminder-profile-btn:hover .reminder-profile-avatar {
+  background: #ffffff;
+  color: #2f123a;
+}
+
+.reminder-profile-btn:hover .reminder-profile-text,
+.reminder-profile-btn:hover .reminder-profile-arrow {
+  color: #ffffff;
+}
+
+.reminder-profile-btn:active {
+  transform: none;
+}
+
+.reminder-profile-btn:focus-visible {
+  outline: 2px solid #805493;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .reminder-profile-btn {
+    gap: 8px;
+    padding: 7px 11px 7px 7px;
+    margin-bottom: 18px;
+    font-size: 12px;
+  }
+
+  .reminder-profile-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
   }
 }

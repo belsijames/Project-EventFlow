@@ -20,14 +20,16 @@ import MyRegistration from './Pages/MyRegistration';
 import Profile from './Pages/Profile';
 import ForgotPassword from './Pages/ForgotPassword';
 import Certificate from './Pages/Certificate';
-import CertificateDetails from './Pages/CertificateDetails';
+import CertificateDetails from './Pages/CertificateDetials';
 import Reminder from './Pages/Reminder';
 import MyQuiz from './Pages/MyQuiz';
 import LearningMaterials from "./Pages/LearningMaterials";
+import MyCertificates from "./Pages/MyCertificates";
 
 
 
 import AdminDashboard from "./Pages/AdminDashboard";
+import AdminIssueCertificate from "./Pages/AdminIssueCertificate";
 import ManageEvents from "./Pages/ManageEvents";
 import ManageUsers from "./Pages/ManageUsers";
 import ManageRegistrations from "./Pages/ManageRegistrations";
@@ -38,6 +40,10 @@ import FacultyRegistrations from "./Pages/FacultyRegistrations";
 import FacultyManageQuizzes from "./Pages/FacultyManageQuizzes";
 import FacultyQuizResults from "./Pages/FacultyQuizResults";
 import FacultyProfile from "./Pages/FacultyProfile";
+import IssueCertificate from "./Pages/IssueCertificate";
+import FacultyCertificate from "./Pages/FacultyCertificate";
+import Registrationform from './Pages/Registrationform';
+
 
 
 
@@ -64,14 +70,17 @@ function App() {
           <Route path="/MyRegistration" element={<MyRegistration/>}/>
           <Route path="/registration/:eventName" element={<Registration />}/>
           <Route path="/my-quiz" element={<MyQuiz />} />
-          <Route path="/learning-materials/:id" element={<LearningMaterials />}/>
+          <Route path="/learning-materials/:id" element={<LearningMaterials />} />
           <Route path="/Certificate" element={<Certificate/>}/>
           <Route path="/certificate/:id" element={<CertificateDetails />}/>
           <Route path="/Reminder" element={<Reminder/>}/>
           <Route path="/Profile"  element={<Profile/>}/>
+          <Route path="/Registrationform" element={<Registrationform/>}/>
+          <Route path="/my-certificates" element={<MyCertificates />} />
 
 
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/AdminIssueCertificate" element={<AdminIssueCertificate />}/>
           <Route path="/admin/events" element={<ManageEvents />} />
           <Route path="/admin/users" element={<ManageUsers />} />
           <Route path="/admin/registrations" element={<ManageRegistrations />}/>
@@ -82,6 +91,9 @@ function App() {
           <Route path="/faculty/quizzes" element={<FacultyManageQuizzes />}/>
           <Route path="/faculty/results" element={<FacultyQuizResults />}/>
           <Route path="/faculty/profile" element={<FacultyProfile />}/>
+          <Route path="/faculty/issue-certificate" element={<IssueCertificate />}/>
+          <Route path="/FacultyCertificate" element={<FacultyCertificate />}/>
+
 
 
           

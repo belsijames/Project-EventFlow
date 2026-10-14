@@ -23,8 +23,95 @@ function Certificate() {
     },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("currentUser");
+    navigate("/Login");
+  };
+
   return (
     <div className="certificate-page">
+
+<div className="user-sidebar">
+
+        <div className="user-brand">
+          <div className="user-brand-icon">E</div>
+          <div>
+            <h2>EventFlow</h2>
+            <span>Learn. Explore. Grow.</span>
+          </div>
+        </div>
+
+        <div className="user-sidebar-label">MAIN MENU</div>
+
+        <button
+          className="user-nav-item active"
+          onClick={() => navigate("/Dashboard")}
+        >
+          <span>▦</span> Dashboard
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Events")}
+        >
+          <span>✦</span> Explore Events
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/MyRegistration")}
+        >
+          <span>▣</span> My Registrations
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/learning")}
+        >
+          <span>⌘</span> Learning Path
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/my-quiz")}
+        >
+          <span>✓</span> My Quiz
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/Reminder")}
+        >
+          <span>♧</span> Reminders
+        </button>
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/my-certificates")}
+        >
+          My Certificates
+        </button>
+
+        <div className="user-sidebar-bottom">
+
+          <button
+            className="user-nav-item"
+            onClick={() => navigate("/Profile")}
+          >
+            <span>⚙</span> My Profile
+          </button>
+
+          <button
+            className="user-nav-item logout-item"
+            onClick={handleLogout}
+          >
+            <span>⇥</span> Logout
+          </button>
+
+        </div>
+      </div>
+
       <nav className="certificate-navbar">
         <div className="certificate-logo">
           Event<span>Flow</span>
