@@ -47,6 +47,30 @@ function Profile() {
       ...savedUser,
       profileImage: savedUser.profileImage || "",
     }));
+
+    // Fetch live profile from MySQL
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/api/users/profile", {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.user) {
+            setUser((prev) => ({ ...prev, ...data.user }));
+            setFormData((prev) => ({
+              ...prev,
+              ...data.user,
+              profileImage: prev.profileImage || savedUser.profileImage || "",
+            }));
+            localStorage.setItem("user", JSON.stringify({ ...savedUser, ...data.user }));
+          }
+        })
+        .catch((err) => console.error("Profile fetch error:", err));
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -141,28 +165,65 @@ function Profile() {
     setMessage("Photo removed. Click Save Changes to confirm.");
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-      const updatedUser = {
-        ...user,
-        ...formData,
-      };
+      const token = localStorage.getItem("token");
 
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      if (token) {
+        const response = await fetch("http://localhost:5000/api/users/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            department: formData.department,
+            year: formData.year,
+            course: formData.course,
+            interest: formData.interest,
+            learningMode: formData.learningMode,
+            skillLevel: formData.skillLevel,
+          }),
+        });
 
-      if (updatedUser.name) {
-        localStorage.setItem("userName", updatedUser.name);
+        const data = await response.json();
+
+        if (!response.ok) {
+          setMessage(data.message || "Failed to update profile in database.");
+          return;
+        }
+
+        const updatedUser = {
+          ...user,
+          ...data.user,
+          profileImage: formData.profileImage,
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        if (updatedUser.name) {
+          localStorage.setItem("userName", updatedUser.name);
+        }
+
+        setUser(updatedUser);
+        setFormData(updatedUser);
+        setEditing(false);
+        setMessage("Profile updated successfully in MySQL!");
+      } else {
+        const updatedUser = {
+          ...user,
+          ...formData,
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        setEditing(false);
+        setMessage("Profile updated successfully!");
       }
-
-      setUser(updatedUser);
-      setFormData(updatedUser);
-      setEditing(false);
-      setMessage("Profile updated successfully!");
     } catch (error) {
       console.error("Profile save error:", error);
-      setMessage(
-        "Unable to save. The browser may be out of storage space. Try a smaller photo."
-      );
+      setMessage("Unable to save. Please check backend connection.");
     }
   };
 
@@ -228,6 +289,8 @@ function Profile() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userName");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
     navigate("/Login");
   };
 
@@ -268,8 +331,15 @@ function Profile() {
           <span>✓</span> My Quiz
         </button>
 
-        <button className="user-nav-item" onClick={() => navigate("/Reminder")}>
+        <button className="user-nav-item" onClick={() => navigate("/ReminderCenter")}>
           <span>♧</span> Reminders
+        </button>
+
+        <button
+          className="user-nav-item"
+          onClick={() => navigate("/my-certificates")}
+        >
+          <span>★</span> My Certificates
         </button>
 
         <div className="user-sidebar-bottom">

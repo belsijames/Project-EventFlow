@@ -1,367 +1,305 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
 
-  let storedUser = {};
+  // Load logged-in user details
+  useEffect(() => {
+    try {
+      const storedUser =
+        localStorage.getItem("user") ||
+        localStorage.getItem("currentUser");
 
-  try {
-    storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-  } catch (error) {
-    storedUser = {};
-  }
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error("Error loading user details:", error);
+      setUser({});
+    }
+  }, []);
 
-  const userName =
-    storedUser.name ||
-    localStorage.getItem("userName") ||
-    "Student";
+  const userName = user?.name || user?.username || "User";
 
+  // Profile image
+  const profileImage =
+    user?.profileImage ||
+    user?.image ||
+    "/profile.png";
+
+  // Dashboard cards
+  const dashboardCards = [
+    {
+      title: "Explore Events",
+      description:
+        "Discover educational events, seminars, and workshops.",
+      icon: "🎓",
+      path: "/Events",
+    },
+    {
+      title: "My Registration",
+      description:
+        "View the events you have registered for.",
+      icon: "📋",
+      path: "/MyRegistration",
+    },
+    {
+      title: "Learning Path",
+      description:
+        "Continue learning and improve your skills.",
+      icon: "📚",
+      path: "/learning",
+    },
+    {
+      title: "My Certificates",
+      description:
+        "View your earned event certificates.",
+      icon: "🏆",
+      path:"/Certificate",
+    },
+    {
+      title: "My Quiz",
+      description:
+        "Practice your technical knowledge with quizzes.",
+      icon: "📝",
+      path: "/MyQuiz",
+    },
+    {
+      title: "My Profile",
+      description:
+        "View and update your personal information.",
+      icon: "👤",
+      path: "/Profile",
+    },
+  ];
+
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("userName");
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
+
     navigate("/Login");
   };
 
   return (
-    <div className="user-dashboard">
+    <div className="dashboard-container">
 
       {/* Sidebar */}
-      <div className="user-sidebar">
-
-        <div className="user-brand">
-          <div className="user-brand-icon">E</div>
-          <div>
-            <h2>EventFlow</h2>
-            <span>Learn. Explore. Grow.</span>
-          </div>
+      <aside className="dashboard-sidebar">
+        <div className="sidebar-brand">
+          <h2>EventFlow</h2>
+          <p>Learn. Connect. Grow.</p>
         </div>
 
-
-        <button
-          className="user-nav-item active"
-          onClick={() => navigate("/Dashboard")}
-        >
-          <span>▦</span> Dashboard
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/Events")}
-        >
-          <span>✦</span> Explore Events
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/MyRegistration")}
-        >
-          <span>▣</span> My Registrations
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/learning")}
-        >
-          <span>⌘</span> Learning Path
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/my-quiz")}
-        >
-          <span>✓</span> My Quiz
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/Reminder")}
-        >
-          <span>♧</span> Reminders
-        </button>
-       
-
-        <div className="user-sidebar-bottom">
+        <nav className="sidebar-menu">
+          <button
+            className="sidebar-link active"
+            onClick={() => navigate("/Dashboard")}
+          >
+            <span>🏠</span>
+            Dashboard
+          </button>
 
           <button
-            className="user-nav-item"
+            className="sidebar-link"
+            onClick={() => navigate("/Events")}
+          >
+            <span>🎓</span>
+            Explore Events
+          </button>
+
+          <button
+            className="sidebar-link"
+            onClick={() => navigate("/MyRegistration")}
+          >
+            <span>📋</span>
+            My Registration
+          </button>
+
+          <button
+            className="sidebar-link"
+            onClick={() => navigate("/learning")}
+          >
+            <span>📚</span>
+            Learning Path
+          </button>
+
+          <button
+            className="sidebar-link"
+            onClick={() => navigate("/Certificate")}
+          >
+            <span>🏆</span>
+            My Certificates
+          </button>
+
+          <button
+            className="sidebar-link"
+            onClick={() => navigate("/my-quiz")}
+          >
+            <span>📝</span>
+            My Quiz
+          </button>
+          <button
+            className="sidebar-link"
+            onClick={() => navigate("/ReminderCenter")}
+          >
+            <span>🔔</span>
+    Reminder
+          </button>
+
+
+          <button
+            className="sidebar-link"
             onClick={() => navigate("/Profile")}
           >
-            <span>⚙</span> My Profile
+            <span>👤</span>
+            My Profile
           </button>
+        </nav>
 
-          <button
-            className="user-nav-item logout-item"
-            onClick={handleLogout}
-          >
-            <span>⇥</span> Logout
-          </button>
+        <button
+          className="sidebar-link logout-link"
+          onClick={handleLogout}
+        >
+          <span>🚪</span>
+          Logout
+        </button>
+      </aside>
 
-        </div>
-      </div>
+      {/* Main Dashboard */}
+      <main className="dashboard-main">
 
-      {/* Main Content */}
-      <div className="user-main">
-
-        {/* Top Navbar */}
-        <div className="user-topbar">
-
+        {/* Topbar */}
+        <header className="dashboard-topbar">
           <div>
-            <span className="user-breadcrumb">
-              Workspace / Dashboard
-            </span>
             <h2>Dashboard</h2>
+            <p>Welcome back to your learning space!</p>
           </div>
 
-          <div className="user-top-actions">
+          {/* Profile button with photo */}
+          <button
+            type="button"
+            className="dashboard-user-info"
+            onClick={() => navigate("/Profile")}
+            aria-label="Open my profile"
+          >
+            <div className="dashboard-user-text">
+              <h4>{userName}</h4>
+              <p>{user?.role || "User"}</p>
+            </div>
 
-            <button
-              className="user-notification-btn"
-              title="Reminders"
-              onClick={() => navigate("/Reminder")}
-            >
-              🔔
-            </button>
-
-            <button
-              className="user-account"
-              onClick={() => navigate("/Profile")}
-            >
-              <div className="user-avatar">
-                <img src="/profile.jpg" alt="Profile" />
-              </div>
-
-              <div className="user-account-text">
-                <strong>{userName}</strong>
-                <span>Student / User</span>
-              </div>
-            </button>
-
-          </div>
-        </div>
+            <img
+  src="/profile.jpg"
+  alt="Profile"
+  className="dashboard-profile-image"
+  onError={(event) => {
+    event.currentTarget.onerror = null;
+    event.currentTarget.src =
+      "https://placehold.co/100x100?text=User";
+  }}
+/>
+          </button>
+        </header>
 
         {/* Welcome Banner */}
-        <div className="user-welcome-banner">
+        <section className="dashboard-welcome-banner">
+          <div className="welcome-content">
+            <p className="welcome-label">
+              YOUR LEARNING JOURNEY
+            </p>
 
-          <div className="user-welcome-content">
-
-            <span className="user-welcome-tag">
-              YOUR LEARNING SPACE
-            </span>
-
-            <h1>
-              Welcome, {userName.split(" ")[0]}!
-            </h1>
+            <h1>Welcome back, {userName}!</h1>
 
             <p>
-              Discover exciting events, build new skills, and make
-              every learning opportunity count.
+              Explore educational events, develop new skills,
+              and make every learning opportunity count with
+              EventFlow.
             </p>
 
             <button
-              className="user-primary-btn"
+              className="welcome-button"
               onClick={() => navigate("/Events")}
             >
               Explore Events <span>→</span>
             </button>
-
           </div>
-        </div>
+        </section>
 
-        {/* Section Heading */}
-        <div className="user-section-heading">
-
-          <div>
-            <span className="user-section-eyebrow">
-              YOUR WORKSPACE
-            </span>
-
-            <h2>Everything in one place</h2>
-
-            <p>
-              Choose an area to continue your EventFlow journey.
-            </p>
-          </div>
-
-        </div>
-
-        {/* Dashboard Cards */}
-        <div className="user-dashboard-grid">
-
-          {/* Explore Events */}
-          <div className="user-dashboard-card events-card">
-
-            <div className="user-card-top">
-              <div className="user-card-icon">🎯</div>
-              <span className="user-card-arrow">↗</span>
+        {/* Workspace Cards */}
+        <section className="dashboard-overview">
+          <div className="dashboard-section-heading">
+            <div>
+              <h2>Your Workspace</h2>
+              <p>Everything you need in one place.</p>
             </div>
-
-            <h3>Explore Events</h3>
-
-            <p>
-              Discover upcoming seminars, workshops and tech events.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/Events")}
-            >
-              Explore Events <span>→</span>
-            </button>
-
           </div>
 
-          {/* My Registrations */}
-          <div className="user-dashboard-card registrations-card">
+          <div className="dashboard-cards-grid">
+            {dashboardCards.map((card) => (
+              <div
+                className="dashboard-card"
+                key={card.title}
+                onClick={() => navigate(card.path)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                  ) {
+                    event.preventDefault();
+                    navigate(card.path);
+                  }
+                }}
+              >
+                <div className="dashboard-card-icon">
+                  {card.icon}
+                </div>
 
-            <div className="user-card-top">
-              <div className="user-card-icon">📅</div>
-              <span className="user-card-arrow">↗</span>
-            </div>
+                <h3>{card.title}</h3>
 
-            <h3>My Registrations</h3>
+                <p>{card.description}</p>
 
-            <p>
-              View the events you have registered for.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/MyRegistration")}
-            >
-              View Registrations <span>→</span>
-            </button>
-
+                <span className="dashboard-card-link">
+                  Open page →
+                </span>
+              </div>
+            ))}
           </div>
-
-          {/* Learning Path */}
-          <div className="user-dashboard-card learning-card">
-
-            <div className="user-card-top">
-              <div className="user-card-icon">🚀</div>
-              <span className="user-card-arrow">↗</span>
-            </div>
-
-            <h3>Learning Path</h3>
-
-            <p>
-              Continue learning and track your learning progress.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/learning")}
-            >
-              Start Learning <span>→</span>
-            </button>
-
-          </div>
-
-          {/* My Quiz */}
-          <div className="user-dashboard-card quiz-card">
-
-            <div className="user-card-top">
-              <div className="user-card-icon">🧠</div>
-              <span className="user-card-arrow">↗</span>
-            </div>
-
-            <h3>My Quiz</h3>
-
-            <p>
-              Practice your skills and check your quiz performance.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/my-quiz")}
-            >
-              Take a Quiz <span>→</span>
-            </button>
-
-          </div>
-
-          {/* Reminders */}
-          <div className="user-dashboard-card reminders-card">
-
-            <div className="user-card-top">
-              <div className="user-card-icon">🔔</div>
-              <span className="user-card-arrow">↗</span>
-            </div>
-
-            <h3>Reminders</h3>
-
-            <p>
-              Check your event reminders and important updates.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/Reminder")}
-            >
-              View Reminders <span>→</span>
-            </button>
-
-          </div>
-
-          {/* My Profile */}
-          <div className="user-dashboard-card profile-card">
-
-            <div className="user-card-top">
-              <div className="user-card-icon">👤</div>
-              <span className="user-card-arrow">↗</span>
-            </div>
-
-            <h3>My Profile</h3>
-
-            <p>
-              View your account details and learning preferences.
-            </p>
-
-            <button
-              className="user-card-link"
-              onClick={() => navigate("/Profile")}
-            >
-              View Profile <span>→</span>
-            </button>
-
-          </div>
-
-        </div>
+        </section>
 
         {/* Bottom Banner */}
-        <div className="user-bottom-banner">
-
-          <div className="user-bottom-icon">✧</div>
-
-          <div className="user-bottom-text">
-            <h3>Keep learning, keep growing!</h3>
-
+        <section className="dashboard-bottom-banner">
+          <div>
+            <h2>Keep Learning, Keep Growing!</h2>
             <p>
-              Every event is a chance to learn something new and
-              move forward.
+              Take the next step in your learning journey
+              with EventFlow.
             </p>
           </div>
 
-          <button onClick={() => navigate("/learning")}>
-            Continue Learning <span>→</span>
+          <button
+            className="bottom-banner-button"
+            onClick={() => navigate("/learning")}
+          >
+            Continue Learning →
           </button>
-
-        </div>
+        </section>
 
         {/* Footer */}
-        <div className="user-dashboard-footer">
+        <footer className="dashboard-footer">
+          <p>
+            © {new Date().getFullYear()} EventFlow.
+            All rights reserved.
+          </p>
+        </footer>
 
-          <span>© 2026 EventFlow</span>
-
-          <span>
-            Smart Educational Event Management & Learning Platform
-          </span>
-
-        </div>
-
-      </div>
+      </main>
     </div>
   );
 }

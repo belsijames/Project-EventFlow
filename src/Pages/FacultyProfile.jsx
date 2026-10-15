@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FacultyDashboard.css";
 import "./FacultyProfile.css";
@@ -49,12 +49,73 @@ function FacultyProfile() {
     setMessage("");
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/api/users/profile", {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.user) {
+            setProfile((prev) => ({ ...prev, ...data.user }));
+            setFormData((prev) => ({ ...prev, ...data.user }));
+          }
+        })
+        .catch((err) => console.error("Faculty profile fetch error:", err));
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.name.trim() || !formData.email.trim()) {
       setMessage("Please enter your name and email address.");
       return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const response = await fetch("http://localhost:5000/api/users/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            department: formData.department,
+            designation: formData.designation,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          setMessage(data.message || "Failed to update profile in database.");
+          return;
+        }
+
+        const updatedProfile = {
+          ...formData,
+          ...data.user,
+        };
+
+        localStorage.setItem("facultyProfile", JSON.stringify(updatedProfile));
+        localStorage.setItem("currentUser", JSON.stringify(updatedProfile));
+        localStorage.setItem("user", JSON.stringify(updatedProfile));
+        setProfile(updatedProfile);
+        setFormData(updatedProfile);
+        setEditing(false);
+        setMessage("Profile updated successfully in MySQL!");
+        return;
+      }
+    } catch (err) {
+      console.error("Faculty profile save error:", err);
     }
 
     const updatedProfile = {
@@ -73,7 +134,9 @@ function FacultyProfile() {
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
       localStorage.removeItem("currentUser");
-      navigate("/");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/Login");
     }
   };
 
@@ -89,49 +152,76 @@ function FacultyProfile() {
     <div className="faculty-layout">
       <aside className="faculty-sidebar">
         <div className="faculty-brand">
-          <div className="faculty-brand-icon">E</div>
-          <div>
-            <h2>EventFlow</h2>
-            <p>Faculty Portal</p>
-          </div>
+          <span className="faculty-brand-icon">✦</span>
+          <span>EventFlow</span>
         </div>
 
-        <p className="faculty-menu-title">MAIN MENU</p>
+        <p className="faculty-menu-label">FACULTY MENU</p>
 
         <nav className="faculty-navigation">
-          <button type="button" onClick={() => navigate("/faculty")}>
-            <span>▦</span><span>Dashboard</span>
-          </button>
-          <button type="button" onClick={() => navigate("/faculty/events")}>
-            <span>▣</span><span>Manage Events</span>
-          </button>
-          <button type="button" onClick={() => navigate("/faculty/registrations")}>
-            <span>☷</span><span>Registrations</span>
-          </button>
-          <button type="button" onClick={() => navigate("/faculty/quizzes")}>
-            <span>✎</span><span>Manage Quizzes</span>
-          </button>
-          <button type="button" onClick={() => navigate("/faculty/results")}>
-            <span>▤</span><span>Quiz Results</span>
-          </button>
           <button
             type="button"
-            className="active"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty")}
+          >
+            <span className="faculty-nav-icon">▦</span>
+            Dashboard
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/events")}
+          >
+            <span className="faculty-nav-icon">◈</span>
+            Manage Events
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/registrations")}
+          >
+            <span className="faculty-nav-icon">♙</span>
+            Registrations
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/quizzes")}
+          >
+            <span className="faculty-nav-icon">☷</span>
+            Manage Quizzes
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/results")}
+          >
+            <span className="faculty-nav-icon">▤</span>
+            Student Results
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link active"
             onClick={() => navigate("/faculty/profile")}
           >
-            <span>♙</span><span>My Profile</span>
+            <span className="faculty-nav-icon">◎</span>
+            My Profile
           </button>
         </nav>
 
-        <div className="faculty-sidebar-bottom">
-          <div className="faculty-sidebar-note">
-            <span>✦</span>
-            <p>Empowering learning through events.</p>
-          </div>
-          <button className="faculty-logout" type="button" onClick={handleLogout}>
-            <span>↪</span> Logout
-          </button>
-        </div>
+        <button
+          type="button"
+          className="faculty-logout"
+          onClick={handleLogout}
+        >
+          <span>↪</span>
+          Logout
+        </button>
       </aside>
 
       <main className="faculty-main faculty-profile-main">

@@ -109,7 +109,7 @@ function Events() {
 
         <button
           className="user-nav-item"
-          onClick={() => navigate("/Reminder")}
+          onClick={() => navigate("/ReminderCenter")}
         >
           <span>♧</span> Reminders
         </button>
@@ -153,7 +153,7 @@ function Events() {
             <button
               className="user-notification-btn"
               title="Reminders"
-              onClick={() => navigate("/Reminder")}
+              onClick={() => navigate("/ReminderCenter")}
             >
               🔔
             </button>
@@ -618,15 +618,7 @@ function Events() {
           )}
 
         </div>
-        <div className="user-dashboard-footer">
-
-          <span>© 2026 EventFlow</span>
-
-          <span>
-            Smart Educational Event Management & Learning Platform
-          </span>
-
-        </div>
+        
 
 
       </div>

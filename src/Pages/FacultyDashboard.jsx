@@ -1,10 +1,61 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FacultyDashboard.css";
+import { getAuthHeaders } from "../api/client";
 
 function FacultyDashboard() {
   const navigate = useNavigate();
+
+  let storedUser = {};
+  try {
+    storedUser =
+      JSON.parse(localStorage.getItem("currentUser") || "null") ||
+      JSON.parse(localStorage.getItem("user") || "null") ||
+      {};
+  } catch {
+    storedUser = {};
+  }
+
+  const facultyName = storedUser.name || "Faculty Member";
+  const designation = storedUser.designation || "Event Coordinator";
+
+  const [stats, setStats] = useState({
+    events: 0,
+    registrations: 0,
+    quizzes: 0,
+    results: 0,
+  });
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const headers = getAuthHeaders();
+
+        const [eventsRes, regsRes, quizzesRes, resultsRes] = await Promise.all([
+          fetch("http://localhost:5000/api/events", { headers }).catch(() => null),
+          fetch("http://localhost:5000/api/registrations", { headers }).catch(() => null),
+          fetch("http://localhost:5000/api/quizzes", { headers }).catch(() => null),
+          fetch("http://localhost:5000/api/quizzes/results", { headers }).catch(() => null),
+        ]);
+
+        const eventsData = eventsRes && eventsRes.ok ? await eventsRes.json() : null;
+        const regsData = regsRes && regsRes.ok ? await regsRes.json() : null;
+        const quizzesData = quizzesRes && quizzesRes.ok ? await quizzesRes.json() : null;
+        const resultsData = resultsRes && resultsRes.ok ? await resultsRes.json() : null;
+
+        setStats({
+          events: eventsData?.events?.length || 0,
+          registrations: regsData?.registrations?.length || 0,
+          quizzes: quizzesData?.quizzes?.length || 0,
+          results: resultsData?.results?.length || 0,
+        });
+      } catch (err) {
+        console.error("Faculty dashboard stats error:", err);
+      }
+    }
+
+    loadStats();
+  }, []);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm(
@@ -13,7 +64,9 @@ function FacultyDashboard() {
 
     if (confirmLogout) {
       localStorage.removeItem("currentUser");
-      navigate("/");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/Login");
     }
   };
 
@@ -79,23 +132,22 @@ function FacultyDashboard() {
           </button>
 
           <button
-  type="button"
-  className="faculty-nav-link"
-  onClick={() => goToPage("/faculty/issue-certificate")}
->
-  <span className="faculty-nav-icon">▤</span>
-  Issue Certificate
-</button>
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => goToPage("/faculty/issue-certificate")}
+          >
+            <span className="faculty-nav-icon">★</span>
+            Issue Certificate
+          </button>
 
- <button
-  type="button"
-  className="faculty-nav-link"
-  onClick={() => goToPage("/FacultyCertificate")}
->
-  <span className="faculty-nav-icon">▤</span>
-  Certificate
-</button>
-
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => goToPage("/FacultyCertificate")}
+          >
+            <span className="faculty-nav-icon">🏆</span>
+            Certificate
+          </button>
 
           <button
             type="button"
@@ -126,10 +178,12 @@ function FacultyDashboard() {
           </div>
 
           <div className="faculty-account">
-            <div className="faculty-avatar">F</div>
+            <div className="faculty-avatar">
+              {facultyName.charAt(0).toUpperCase()}
+            </div>
             <div>
-              <strong>Faculty Member</strong>
-              <span>Faculty</span>
+              <strong>{facultyName}</strong>
+              <span>{designation}</span>
             </div>
           </div>
         </header>
@@ -141,7 +195,7 @@ function FacultyDashboard() {
               FACULTY WORKSPACE
             </span>
 
-            <h1>Welcome Back, Faculty!</h1>
+            <h1>Welcome Back, {facultyName.split(" ")[0]}!</h1>
 
             <p>
               Organize educational events, manage quizzes, and
@@ -173,7 +227,7 @@ function FacultyDashboard() {
             <div className="faculty-stat-icon purple">◈</div>
             <div>
               <p>Total Events</p>
-              <h2>0</h2>
+              <h2>{stats.events}</h2>
               <span>Events overview</span>
             </div>
           </article>
@@ -182,7 +236,7 @@ function FacultyDashboard() {
             <div className="faculty-stat-icon green">♙</div>
             <div>
               <p>Registrations</p>
-              <h2>0</h2>
+              <h2>{stats.registrations}</h2>
               <span>Student registrations</span>
             </div>
           </article>
@@ -191,7 +245,7 @@ function FacultyDashboard() {
             <div className="faculty-stat-icon orange">☷</div>
             <div>
               <p>Total Quizzes</p>
-              <h2>0</h2>
+              <h2>{stats.quizzes}</h2>
               <span>Learning assessments</span>
             </div>
           </article>
@@ -200,7 +254,7 @@ function FacultyDashboard() {
             <div className="faculty-stat-icon blue">✓</div>
             <div>
               <p>Student Results</p>
-              <h2>0</h2>
+              <h2>{stats.results}</h2>
               <span>Quiz attempts</span>
             </div>
           </article>
@@ -278,8 +332,8 @@ function FacultyDashboard() {
             <h3>Your Faculty Workspace</h3>
             <p>
               Use the dashboard to manage events and learning
-              activities. Statistics will be connected to the
-              database in the next development stage.
+              activities. Live database records keep all your statistics
+              and student participation up to date.
             </p>
           </div>
         </section>
@@ -293,4 +347,3 @@ function FacultyDashboard() {
 }
 
 export default FacultyDashboard;
-

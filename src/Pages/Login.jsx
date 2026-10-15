@@ -5,6 +5,7 @@ import "./Login.css";
 
 const API = "http://localhost:5000/api/auth/login";
 
+
 function Login() {
   const navigate = useNavigate();
 
@@ -69,12 +70,10 @@ function Login() {
       }
 
       // Get user details from backend
-      const user = data.user;
-
-      if (!user || !user.role) {
-        setError("User details or role missing in backend response.");
-        return;
-      }
+     const user = {
+  ...data.user,
+  id: data.user.id || data.user.userId || data.user.user_id,
+};
 
       // Declare role before using it
       const role = String(user.role).trim().toLowerCase();
@@ -84,8 +83,16 @@ function Login() {
         setError("Please select the correct role for this account.");
         return;
       }
+// Save the JWT token returned by your existing login API
+localStorage.setItem("token", data.token);
 
-      // Save logged-in user details
+// Save the logged-in user's details
+localStorage.setItem("user", JSON.stringify(data.user));
+localStorage.setItem("currentUser", JSON.stringify(data.user));
+      // Save logged-in user details & token
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("currentUser", JSON.stringify(user));
       localStorage.setItem("userName", user.name || "");
@@ -107,7 +114,7 @@ function Login() {
       console.error("Login error:", err);
 
       setError(
-        "Backend connect aagala. Node.js server running-aa check pannunga."
+        "Unable to connect to the backend server. Please verify the backend is running."
       );
     } finally {
       setLoading(false);

@@ -168,8 +168,7 @@ function SignUp() {
               required
             >
               <option value="User">User</option>
-<option value="Faculty">Faculty</option>
-<option value="Admin">Admin</option>
+              <option value="Faculty">Faculty</option>
             </select>
           </div>
 

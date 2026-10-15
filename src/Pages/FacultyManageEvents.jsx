@@ -1,40 +1,14 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FacultyManageEvents.css";
+import { getAuthHeaders } from "../api/client";
 
 function FacultyManageEvents() {
   const navigate = useNavigate();
 
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Tech Talk",
-      category: "Technology",
-      date: "2026-10-15",
-      time: "10:00 AM",
-      location: "Computer Science Department",
-      status: "Published",
-    },
-    {
-      id: 2,
-      title: "Web Development Bootcamp",
-      category: "Workshop",
-      date: "2026-10-18",
-      time: "10:00 AM",
-      location: "Computer Lab",
-      status: "Published",
-    },
-    {
-      id: 3,
-      title: "Communication Skills Workshop",
-      category: "Workshop",
-      date: "2026-10-22",
-      time: "11:00 AM",
-      location: "Seminar Hall",
-      status: "Draft",
-    },
-  ]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const emptyForm = {
     title: "",
@@ -42,7 +16,7 @@ function FacultyManageEvents() {
     date: "",
     time: "",
     location: "",
-    status: "Draft",
+    status: "Published",
   };
 
   const [search, setSearch] = useState("");
@@ -51,10 +25,41 @@ function FacultyManageEvents() {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
 
+  const fetchEvents = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/events", {
+        headers: getAuthHeaders(),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load events.");
+      }
+
+      setEvents(Array.isArray(data.events) ? data.events : []);
+    } catch (err) {
+      console.error("Faculty fetch events error:", err);
+      setError(err.message || "Unable to load events.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   const filteredEvents = events.filter((event) => {
+    const title = String(event.title || "").toLowerCase();
+    const category = String(event.category || "").toLowerCase();
+    const searchLower = search.toLowerCase();
+
     const matchesSearch =
-      event.title.toLowerCase().includes(search.toLowerCase()) ||
-      event.category.toLowerCase().includes(search.toLowerCase());
+      title.includes(searchLower) || category.includes(searchLower);
 
     const matchesStatus =
       statusFilter === "All" || event.status === statusFilter;
@@ -83,14 +88,13 @@ function FacultyManageEvents() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((previous) => ({
       ...previous,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title.trim() || !formData.date || !formData.location.trim()) {
@@ -98,36 +102,70 @@ function FacultyManageEvents() {
       return;
     }
 
-    if (editingId !== null) {
-      setEvents((previous) =>
-        previous.map((event) =>
-          event.id === editingId
-            ? { ...event, ...formData }
-            : event
-        )
-      );
-    } else {
-      setEvents((previous) => [
-        ...previous,
-        { id: Date.now(), ...formData },
-      ]);
-    }
+    try {
+      if (editingId !== null) {
+        const response = await fetch(
+          `http://localhost:5000/api/events/${editingId}`,
+          {
+            method: "PUT",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(formData),
+          }
+        );
 
-    setShowForm(false);
-    setEditingId(null);
-    setFormData({ ...emptyForm });
+        if (!response.ok) {
+          const data = await response.json();
+          alert(data.message || "Failed to update event.");
+          return;
+        }
+      } else {
+        const response = await fetch("http://localhost:5000/api/events", {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          alert(data.message || "Failed to create event.");
+          return;
+        }
+      }
+
+      setShowForm(false);
+      setEditingId(null);
+      setFormData({ ...emptyForm });
+      fetchEvents();
+    } catch (err) {
+      console.error("Save event error:", err);
+      alert("Unable to save event.");
+    }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this event?"
     );
 
     if (!confirmed) return;
 
-    setEvents((previous) =>
-      previous.filter((event) => event.id !== id)
-    );
+    try {
+      const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.message || "Failed to delete event.");
+        return;
+      }
+
+      setEvents((previous) => previous.filter((event) => event.id !== id));
+    } catch (err) {
+      console.error("Delete event error:", err);
+      alert("Unable to delete event.");
+    }
   };
 
   const handleLogout = () => {
@@ -135,12 +173,14 @@ function FacultyManageEvents() {
 
     if (confirmed) {
       localStorage.removeItem("currentUser");
-      navigate("/");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/Login");
     }
   };
 
   const publishedCount = events.filter(
-    (event) => event.status === "Published"
+    (event) => event.status === "Published" || event.status === "Upcoming"
   ).length;
 
   const draftCount = events.filter(
@@ -239,58 +279,53 @@ function FacultyManageEvents() {
           </div>
         </header>
 
+        {error && (
+          <div style={{ color: "#e11d48", padding: "10px", margin: "10px 0" }}>
+            {error}
+          </div>
+        )}
+
         <section className="faculty-events-banner">
           <div>
-            <span className="faculty-events-eyebrow">
-              EVENT MANAGEMENT
-            </span>
-            <h1>Educational Events</h1>
-            <p>
-              Plan workshops, tech talks and learning activities
-              for students.
-            </p>
+            <p>EVENTFLOW / FACULTY</p>
+            <h1>Manage Educational Events</h1>
+            <span>Schedule and organize workshops, seminars and bootcamps.</span>
           </div>
 
           <button
             type="button"
-            className="faculty-event-add"
+            className="faculty-events-add-btn"
             onClick={openAddForm}
           >
-            + Create Event
+            + Create New Event
           </button>
         </section>
 
-        <section className="faculty-event-stats">
-          <article>
-            <span className="event-stat-symbol purple">◈</span>
-            <div>
-              <p>Total Events</p>
-              <h2>{events.length}</h2>
-            </div>
-          </article>
+        <section className="faculty-events-stats">
+          <div className="faculty-events-stat">
+            <span>Total Events</span>
+            <h2>{events.length}</h2>
+            <p>All active events</p>
+          </div>
 
-          <article>
-            <span className="event-stat-symbol green">✓</span>
-            <div>
-              <p>Published</p>
-              <h2>{publishedCount}</h2>
-            </div>
-          </article>
+          <div className="faculty-events-stat">
+            <span>Published</span>
+            <h2>{publishedCount}</h2>
+            <p>Live for student registration</p>
+          </div>
 
-          <article>
-            <span className="event-stat-symbol orange">✎</span>
-            <div>
-              <p>Drafts</p>
-              <h2>{draftCount}</h2>
-            </div>
-          </article>
+          <div className="faculty-events-stat">
+            <span>Drafts</span>
+            <h2>{draftCount}</h2>
+            <p>In preparation</p>
+          </div>
         </section>
 
         <section className="faculty-events-table-card">
-          <div className="faculty-events-table-heading">
+          <div className="faculty-events-heading">
             <div>
               <h2>All Events</h2>
-              <p>View, edit and manage your events.</p>
+              <p>View, update or delete your educational events.</p>
             </div>
           </div>
 
@@ -308,6 +343,7 @@ function FacultyManageEvents() {
             >
               <option value="All">All Status</option>
               <option value="Published">Published</option>
+              <option value="Upcoming">Upcoming</option>
               <option value="Draft">Draft</option>
             </select>
           </div>
@@ -326,7 +362,13 @@ function FacultyManageEvents() {
               </thead>
 
               <tbody>
-                {filteredEvents.length > 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="faculty-event-empty">
+                      Loading events...
+                    </td>
+                  </tr>
+                ) : filteredEvents.length > 0 ? (
                   filteredEvents.map((event) => (
                     <tr key={event.id}>
                       <td>
@@ -343,7 +385,8 @@ function FacultyManageEvents() {
                       <td>
                         <span
                           className={`faculty-event-status ${
-                            event.status === "Published"
+                            event.status === "Published" ||
+                            event.status === "Upcoming"
                               ? "published"
                               : "draft"
                           }`}
@@ -435,9 +478,10 @@ function FacultyManageEvents() {
                   <input
                     id="faculty-event-date"
                     name="date"
-                    type="date"
+                    type="text"
                     value={formData.date}
                     onChange={handleChange}
+                    placeholder="e.g. 20 Oct 2026"
                     required
                   />
                 </div>
@@ -447,9 +491,10 @@ function FacultyManageEvents() {
                   <input
                     id="faculty-event-time"
                     name="time"
-                    type="time"
+                    type="text"
                     value={formData.time}
                     onChange={handleChange}
+                    placeholder="e.g. 10:00 AM – 1:00 PM"
                     required
                   />
                 </div>
@@ -472,8 +517,9 @@ function FacultyManageEvents() {
                 value={formData.status}
                 onChange={handleChange}
               >
-                <option value="Draft">Draft</option>
                 <option value="Published">Published</option>
+                <option value="Upcoming">Upcoming</option>
+                <option value="Draft">Draft</option>
               </select>
 
               <div className="faculty-event-modal-actions">

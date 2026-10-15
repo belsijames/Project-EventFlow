@@ -170,28 +170,56 @@ function AdminIssueCertificate() {
 
   return (
     <div className="admin-certificate-page">
-      <aside className="certificate-sidebar">
-        <div className="certificate-brand">
-          <span className="brand-icon">E</span>
-          <div>
-            <h2>EventFlow</h2>
-            <p>Admin Panel</p>
-          </div>
+       <aside className="admin-sidebar">
+        <div className="admin-logo">
+          <h2>EventFlow</h2>
+          <p>Admin Panel</p>
         </div>
 
-        <div className="sidebar-label">ADMINISTRATION</div>
+        <nav className="admin-menu">
+          <div
+            className="admin-menu-item active"
+            onClick={() => navigate("/admin")}
+          >
+            <span>🏠</span>
+            <span>Dashboard</span>
+          </div>
 
-        <button onClick={() => navigate("/AdminDashboard")}>
-          <span>▦</span> Dashboard
-        </button>
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/events")}
+          >
+            <span>🎉</span>
+            <span>Manage Events</span>
+          </div>
 
-        <button onClick={() => navigate("/AdminIssueCertificate")} className="active">
-          <span>▤</span> Certificates
-        </button>
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/users")}
+          >
+            <span>👥</span>
+            <span>Manage Users</span>
+          </div>
 
-        <div className="sidebar-bottom">
-          <p>Certificate Control</p>
-          <small>Manage student certificates</small>
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/registrations")}
+          >
+            <span>📝</span>
+            <span>Registrations</span>
+          </div>
+
+          <div
+            className="admin-menu-item"
+            onClick={() => navigate("/admin/quizzes")}
+          >
+            <span>📚</span>
+            <span>Manage Quizzes</span>
+          </div>
+        </nav>
+
+        <div className="admin-sidebar-bottom">
+         
         </div>
       </aside>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyRegistration.css";
 
-const API = "http://localhost:5000/api/my-registrations";
+const API = "http://localhost:5000/api/registrations/my";
 
 function MyRegistration() {
   const navigate = useNavigate();
@@ -16,36 +16,51 @@ function MyRegistration() {
     fetchRegistrations();
   }, []);
 
-  const fetchRegistrations = async () => {
-    setLoading(true);
-    setError("");
+ 
+const fetchRegistrations = async () => {
+  setLoading(true);
+  setError("");
 
-    try {
-      const response = await fetch(API);
+  try {
+    const token = localStorage.getItem("token");
 
-      if (!response.ok) {
-        throw new Error("Unable to load registrations.");
-      }
-
-      const data = await response.json();
-
-      // Supports either an array or { registrations: [...] }
-      const list = Array.isArray(data)
-        ? data
-        : Array.isArray(data.registrations)
-        ? data.registrations
-        : [];
-
-      setRegistrations(list);
-    } catch (err) {
-      console.error("My Registrations error:", err);
-      setError(
-        "Could not load registrations. Check whether the backend is running."
-      );
-    } finally {
-      setLoading(false);
+    if (!token) {
+      throw new Error("Login session expired. Please log in again.");
     }
-  };
+
+    const response = await fetch(API, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Unable to load registrations."
+      );
+    }
+
+    const list = Array.isArray(data)
+      ? data
+      : Array.isArray(data.registrations)
+      ? data.registrations
+      : [];
+
+    setRegistrations(list);
+  } catch (err) {
+    console.error("My Registrations error:", err);
+    setError(
+      err.message || "Could not load registrations. Check the backend."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const getEventName = (registration) =>
     registration.event_name ||
@@ -80,11 +95,12 @@ function MyRegistration() {
   const getEventImage = (eventName) => {
     const name = eventName.toLowerCase();
 
-    if (name.includes("tech talk")) return "/tech-talk.jpeg";
+    if (name.includes("tech talk")) return "/techtalk.jpeg";
     if (name.includes("creative")) return "/creative.jpeg";
     if (name.includes("web development")) return "/bootcamp.jpeg";
     if (name.includes("communication")) return "/communication.jpeg";
     if (name.includes("career guidance")) return "/Career.jpeg";
+    if (name.includes("science expo")) return "/innovation.jpeg";
 
     return "";
   };
@@ -178,7 +194,7 @@ function MyRegistration() {
 
         <button
           className="user-nav-item"
-          onClick={() => navigate("/Reminder")}
+          onClick={() => navigate("/ReminderCenter")}
         >
           <span>♧</span> Reminders
         </button>
@@ -210,7 +226,7 @@ function MyRegistration() {
             <button
               className="user-notification-btn"
               title="Reminders"
-              onClick={() => navigate("/Reminder")}
+              onClick={() => navigate("/ReminderCenter")}
             >
               🔔
             </button>

@@ -1,238 +1,422 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Certificate.css";
+
+const API = "http://localhost:5000/api/certificates";
 
 function Certificate() {
   const navigate = useNavigate();
 
-  const certificates = [
-    {
-      id: 1,
-      title: "Web Development Workshop",
-      category: "Workshop",
-      date: "10 October 2026",
-      certificateId: "EF-WEB-001",
-    },
-    {
-      id: 2,
-      title: "Communication Skills Workshop",
-      category: "Workshop",
-      date: "15 October 2026",
-      certificateId: "EF-COM-002",
-    },
-  ];
+  const [certificates, setCertificates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("currentUser");
-    navigate("/Login");
+  const [userInfo, setUserInfo] = useState({});
+  const [debugInfo, setDebugInfo] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCertificates() {
+      setLoading(true);
+      setError("");
+      setDebugInfo("");
+
+      try {
+        // Read login details
+        const storedUser = JSON.parse(
+          localStorage.getItem("user") || "{}"
+        );
+
+        const currentUser = JSON.parse(
+          localStorage.getItem("currentUser") || "{}"
+        );
+
+        const user = {
+          ...currentUser,
+          ...storedUser,
+        };
+
+        const token = localStorage.getItem("token");
+
+        const userId =
+          user.id ||
+          user.userId ||
+          user.user_id ||
+          user.userID;
+
+        if (cancelled) return;
+
+        setUserInfo(user);
+
+        console.log("Certificate page - User:", user);
+        console.log("Certificate page - User ID:", userId);
+        console.log("Certificate page - Token exists:", Boolean(token));
+
+        if (!token) {
+          throw new Error(
+            "Login token not found. Please logout and login again."
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            "Student ID is missing from login data. Please login again."
+          );
+        }
+
+        // Request certificates belonging to this user
+        const response = await fetch(
+          `${API}/my/${encodeURIComponent(userId)}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const responseText = await response.text();
+
+        console.log("Certificate API status:", response.status);
+        console.log("Certificate API response:", responseText);
+
+        let data;
+
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          throw new Error(
+            "Backend returned an invalid response. Check that the backend is running on port 5000."
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || `API error: ${response.status}`
+          );
+        }
+
+        let list = [];
+
+        if (Array.isArray(data)) {
+          list = data;
+        } else if (Array.isArray(data.certificates)) {
+          list = data.certificates;
+        } else if (Array.isArray(data.data)) {
+          list = data.data;
+        }
+
+        if (!cancelled) {
+          setCertificates(list);
+          setDebugInfo(
+            `Logged-in user ID: ${userId} | Certificates received: ${list.length}`
+          );
+        }
+      } catch (err) {
+        console.error("Certificate loading failed:", err);
+
+        if (!cancelled) {
+          setError(
+            err.message || "Unable to load certificates."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadCertificates();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const formatDate = (value) => {
+    if (!value) return "Date unavailable";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const printCertificate = (certificate) => {
+    const safe = (value) =>
+      String(value ?? "").replace(/[&<>"']/g, (char) => {
+        const entities = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        };
+
+        return entities[char];
+      });
+
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+      alert("Please allow pop-ups to print your certificate.");
+      return;
+    }
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>EventFlow Certificate</title>
+        <meta charset="UTF-8" />
+        <style>
+          @page {
+            size: A4 landscape;
+            margin: 12mm;
+          }
+
+          body {
+            font-family: Georgia, serif;
+            text-align: center;
+            color: #2f123a;
+            padding: 25px;
+          }
+
+          .certificate {
+            border: 8px double #b18a3b;
+            outline: 1px solid #b18a3b;
+            outline-offset: -15px;
+            padding: 50px 25px;
+            min-height: 380px;
+          }
+
+          .brand {
+            letter-spacing: 5px;
+            font: bold 15px Arial, sans-serif;
+          }
+
+          h1 {
+            font-size: 36px;
+          }
+
+          .student {
+            font-size: 34px;
+            margin: 25px;
+          }
+
+          .event {
+            font-size: 25px;
+            font-weight: bold;
+          }
+
+          .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 55px;
+            font: 12px Arial, sans-serif;
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="certificate">
+          <div class="brand">EVENTFLOW</div>
+          <h1>Certificate of Participation</h1>
+          <p>This certificate is presented to</p>
+
+          <div class="student">
+            ${safe(
+              certificate.student_name ||
+              userInfo.name ||
+              "Student"
+            )}
+          </div>
+
+          <p>for participating in</p>
+
+          <div class="event">
+            ${safe(certificate.event_name)}
+          </div>
+
+          <div class="footer">
+            <span>
+              Issue Date: ${safe(formatDate(certificate.issue_date))}
+            </span>
+
+            <span>
+              Certificate ID: ${safe(
+                certificate.certificate_id || "N/A"
+              )}
+            </span>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+          };
+        </script>
+      </body>
+      </html>
+    `);
+
+    printWindow.document.close();
   };
 
   return (
-    <div className="certificate-page">
+    <div className="new-certificate-page">
+      <header className="nc-header">
+        <button
+          className="nc-back"
+          type="button"
+          onClick={() => navigate(-1)}
+        >
+          ← Back
+        </button>
 
-<div className="user-sidebar">
-
-        <div className="user-brand">
-          <div className="user-brand-icon">E</div>
-          <div>
-            <h2>EventFlow</h2>
-            <span>Learn. Explore. Grow.</span>
-          </div>
+        <div className="nc-brand">
+          <span className="nc-brand-icon">✦</span>
+          <span>EventFlow</span>
         </div>
 
-        <div className="user-sidebar-label">MAIN MENU</div>
-
         <button
-          className="user-nav-item active"
+          className="nc-dashboard-btn"
+          type="button"
           onClick={() => navigate("/Dashboard")}
         >
-          <span>▦</span> Dashboard
+          Dashboard
         </button>
+      </header>
 
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/Events")}
-        >
-          <span>✦</span> Explore Events
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/MyRegistration")}
-        >
-          <span>▣</span> My Registrations
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/learning")}
-        >
-          <span>⌘</span> Learning Path
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/my-quiz")}
-        >
-          <span>✓</span> My Quiz
-        </button>
-
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/Reminder")}
-        >
-          <span>♧</span> Reminders
-        </button>
-        <button
-          className="user-nav-item"
-          onClick={() => navigate("/my-certificates")}
-        >
-          My Certificates
-        </button>
-
-        <div className="user-sidebar-bottom">
-
-          <button
-            className="user-nav-item"
-            onClick={() => navigate("/Profile")}
-          >
-            <span>⚙</span> My Profile
-          </button>
-
-          <button
-            className="user-nav-item logout-item"
-            onClick={handleLogout}
-          >
-            <span>⇥</span> Logout
-          </button>
-
-        </div>
-      </div>
-
-      <nav className="certificate-navbar">
-        <div className="certificate-logo">
-          Event<span>Flow</span>
-        </div>
-
-        <div className="certificate-nav-links">
-          <button onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </button>
-          <button onClick={() => navigate("/events")}>
-            Events
-          </button>
-          <button onClick={() => navigate("/learning")}>
-            Learning Path
-          </button>
-          <button className="active-certificate">
-            Certificates
-          </button>
-        </div>
-      </nav>
-
-      <main className="certificate-container">
-        <div className="certificate-heading">
+      <main className="nc-main">
+        <section className="nc-hero">
           <div>
-            <p className="certificate-eyebrow">
+            <span className="nc-eyebrow">
               YOUR ACHIEVEMENTS
-            </p>
+            </span>
+
             <h1>My Certificates</h1>
-            <p className="certificate-subtitle">
-              Celebrate your learning journey and achievements.
-            </p>
-          </div>
 
-          <div className="certificate-count">
-            <span>🏆</span>
-            <div>
-              <strong>{certificates.length}</strong>
-              <small>Certificates</small>
-            </div>
-          </div>
-        </div>
-
-        <div className="certificate-info">
-          <div className="certificate-info-icon">✦</div>
-          <div>
-            <h3>Your achievements matter</h3>
             <p>
-              Completed learning activities and eligible events
-              can be recognized with certificates.
+              Certificates issued to your account by faculty.
             </p>
           </div>
-        </div>
 
-        <div className="certificate-section-title">
-          <h2>Available Certificates</h2>
-          <span>{certificates.length} items</span>
-        </div>
+          <div className="nc-trophy">🏆</div>
+        </section>
 
-        <div className="certificate-grid">
-          {certificates.map((certificate) => (
-            <article
-              className="certificate-card"
-              key={certificate.id}
+        {loading ? (
+          <div className="nc-summary">
+            Loading your certificates...
+          </div>
+        ) : error ? (
+          <div className="nc-summary">
+            <strong>Unable to load certificates</strong>
+            <p>{error}</p>
+
+            <button
+              className="nc-print-btn"
+              type="button"
+              onClick={() => window.location.reload()}
             >
-              <div className="certificate-preview">
-                <div className="certificate-paper">
-                  <span className="certificate-seal">✦</span>
-                  <p className="paper-brand">EVENTFLOW</p>
-                  <h3>Certificate</h3>
-                  <p className="paper-caption">
-                    OF PARTICIPATION
-                  </p>
-                  <div className="paper-line"></div>
-                  <p className="paper-event">
-                    {certificate.title}
-                  </p>
-                  <div className="paper-footer">
-                    <span>EVENTFLOW</span>
-                    <span>✦</span>
-                  </div>
-                </div>
-              </div>
+              Try Again
+            </button>
+          </div>
+        ) : certificates.length === 0 ? (
+          <div className="nc-summary">
+            <strong>No certificates found</strong>
 
-              <div className="certificate-card-content">
-                <span className="certificate-category">
-                  {certificate.category}
-                </span>
+            <p>
+              No certificates were returned for this login account.
+              Check the user ID shown below.
+            </p>
 
-                <h3>{certificate.title}</h3>
+            <p>{debugInfo}</p>
+          </div>
+        ) : (
+          <>
+            <section className="nc-section-heading">
+              <h2>Your Certificates</h2>
 
-                <p className="certificate-date">
-                  <span>▦</span>
-                  {certificate.date}
-                </p>
+              <p>
+                {certificates.length} certificate(s) issued to you.
+              </p>
+            </section>
 
-                <p className="certificate-id">
-                  ID: {certificate.certificateId}
-                </p>
-
-                <button
-                  className="certificate-view-btn"
-                  onClick={() =>
-                    navigate(
-                      `/certificate/${certificate.id}`
-                    )
+            <section className="nc-grid">
+              {certificates.map((certificate, index) => (
+                <article
+                  className="nc-card"
+                  key={
+                    certificate.id ||
+                    certificate.certificate_id ||
+                    index
                   }
                 >
-                  View Certificate <span>→</span>
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
+                  <div className="nc-preview">
+                    <div className="nc-preview-inner">
+                      <span className="nc-preview-brand">
+                        EVENTFLOW
+                      </span>
 
-        <div className="certificate-note">
-          <span>✧</span>
-          <p>
-            Keep learning, participate in events, and grow your
-            collection of achievements.
-          </p>
-        </div>
+                      <span className="nc-preview-award">
+                        ✦
+                      </span>
+
+                      <h3>Certificate</h3>
+
+                      <span className="nc-preview-line" />
+
+                      <p>{certificate.event_name}</p>
+
+                      <span className="nc-preview-footer">
+                        CERTIFICATE OF PARTICIPATION
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="nc-card-content">
+                    <span className="nc-category">
+                      Issued Certificate
+                    </span>
+
+                    <h3>{certificate.event_name}</h3>
+
+                    <p className="nc-date">
+                      Issued: {formatDate(certificate.issue_date)}
+                    </p>
+
+                    <p className="nc-date">
+                      Certificate ID:{" "}
+                      {certificate.certificate_id || "N/A"}
+                    </p>
+
+                    <button
+                      className="nc-print-btn"
+                      type="button"
+                      onClick={() =>
+                        printCertificate(certificate)
+                      }
+                    >
+                      Print Certificate ↗
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </section>
+          </>
+        )}
       </main>
     </div>
   );

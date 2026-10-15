@@ -131,15 +131,27 @@ function WebDevelopment() {
           <div className="event-actions">
 
             
-    <button className="register-btn"
-      onClick={() =>
-        navigate("/registration/WebDevelopment", {
-          state: { eventName: "Web Development Bootcamp" }
-        })
-      }
-    >
-      Register Now
-    </button>
+    
+<button
+  className="register-btn"
+  onClick={() =>
+    navigate("/registration/WebDevelopment", {
+      state: {
+        event: {
+          eventName: "Web Development Bootcamp",
+          eventType: "Bootcamp",
+          date: "20 Oct 2026",
+          time: "10:00 AM – 4:00 PM",
+          venue: "Computer Science Department",
+        },
+        eventName: "Web Development Bootcamp",
+      },
+    })
+  }
+>
+  Register Now
+</button>
+
 
             <button className="heart-btn">
               ♡

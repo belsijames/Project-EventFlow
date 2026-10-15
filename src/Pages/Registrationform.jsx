@@ -110,9 +110,10 @@ const Registrationform = () => {
         "http://localhost:5000/api/registrations",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+         headers: {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+},
           body: JSON.stringify({
             userId: user.id,
             eventName: event.title,

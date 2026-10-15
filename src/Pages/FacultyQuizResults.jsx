@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FacultyDashboard.css";
 import "./FacultyQuizResults.css";
@@ -7,53 +7,40 @@ import "./FacultyQuizResults.css";
 function FacultyQuizResults() {
   const navigate = useNavigate();
 
-  const [results] = useState([
-    {
-      id: 1,
-      student: "Arun Kumar",
-      email: "arun@example.com",
-      quiz: "HTML Fundamentals",
-      score: 8,
-      total: 10,
-      date: "08 Oct 2026",
-    },
-    {
-      id: 2,
-      student: "Priya S",
-      email: "priya@example.com",
-      quiz: "CSS Basics",
-      score: 9,
-      total: 10,
-      date: "08 Oct 2026",
-    },
-    {
-      id: 3,
-      student: "Rahul M",
-      email: "rahul@example.com",
-      quiz: "JavaScript Essentials",
-      score: 6,
-      total: 10,
-      date: "07 Oct 2026",
-    },
-    {
-      id: 4,
-      student: "Divya R",
-      email: "divya@example.com",
-      quiz: "HTML Fundamentals",
-      score: 10,
-      total: 10,
-      date: "07 Oct 2026",
-    },
-    {
-      id: 5,
-      student: "Sneha P",
-      email: "sneha@example.com",
-      quiz: "CSS Basics",
-      score: 5,
-      total: 10,
-      date: "06 Oct 2026",
-    },
-  ]);
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/api/quizzes/results", {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.results)) {
+            setResults(
+              data.results.map((r) => ({
+                id: r.id,
+                student: r.student || "Student",
+                email: r.email || "—",
+                quiz: r.quiz || r.quiz_title || "Quiz",
+                score: r.score,
+                total: r.total,
+                date: r.date ? String(r.date).slice(0, 10) : "—",
+              }))
+            );
+          }
+        })
+        .catch((err) => console.error("Fetch quiz results error:", err))
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const [search, setSearch] = useState("");
   const [selectedQuiz, setSelectedQuiz] = useState("All");

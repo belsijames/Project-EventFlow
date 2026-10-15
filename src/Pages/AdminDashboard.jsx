@@ -24,7 +24,12 @@ const adminName =
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin/dashboard-stats")
+    fetch("http://localhost:5000/api/admin/dashboard-stats", {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Unable to fetch dashboard statistics");
@@ -32,8 +37,13 @@ const adminName =
         return response.json();
       })
       .then((data) => {
-        if (data.success) {
-          setStatsData(data.stats);
+        if (data.success && data.stats) {
+          setStatsData({
+            totalEvents: data.stats.totalEvents || 0,
+            totalUsers: data.stats.totalUsers || 0,
+            totalRegistrations: data.stats.totalRegistrations || 0,
+            totalQuizzes: data.stats.totalQuizzes || 0,
+          });
         }
       })
       .catch((error) => {
@@ -50,7 +60,8 @@ const adminName =
       localStorage.removeItem("currentUser");
       localStorage.removeItem("user");
       localStorage.removeItem("userName");
-      navigate("/");
+      localStorage.removeItem("token");
+      navigate("/Login");
     }
   };
 
@@ -215,7 +226,7 @@ const adminName =
           <button
             type="button"
             className="admin-primary-btn"
-            onClick={() => navigate("/IssueCertificate")}
+            onClick={() => navigate("/AdminIssueCertificate")}
           >
             Manage Certificates →
           </button>

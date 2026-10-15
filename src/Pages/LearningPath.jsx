@@ -127,7 +127,7 @@ function LearningPath() {
 
         <button
           className="user-nav-item"
-          onClick={() => navigate("/Reminder")}
+          onClick={() => navigate("/ReminderCenter")}
         >
           <span>♧</span> Reminders
         </button>

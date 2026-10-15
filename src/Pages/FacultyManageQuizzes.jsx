@@ -1,39 +1,15 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FacultyDashboard.css";
 import "./FacultyManageQuizzes.css";
+import { getAuthHeaders } from "../api/client";
 
 function FacultyManageQuizzes() {
   const navigate = useNavigate();
 
-  const [quizzes, setQuizzes] = useState([
-    {
-      id: 1,
-      title: "HTML Fundamentals",
-      category: "Web Development",
-      questions: 10,
-      duration: 15,
-      status: "Published",
-    },
-    {
-      id: 2,
-      title: "CSS Basics",
-      category: "Web Development",
-      questions: 10,
-      duration: 20,
-      status: "Draft",
-    },
-    {
-      id: 3,
-      title: "JavaScript Essentials",
-      category: "Programming",
-      questions: 15,
-      duration: 25,
-      status: "Published",
-    },
-  ]);
-
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [showForm, setShowForm] = useState(false);
@@ -49,9 +25,44 @@ function FacultyManageQuizzes() {
 
   const [form, setForm] = useState(emptyForm);
 
+  const fetchQuizzes = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/quizzes", {
+        headers: getAuthHeaders(),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load quizzes.");
+      }
+
+      setQuizzes(
+        Array.isArray(data.quizzes)
+          ? data.quizzes.map((q) => ({
+              ...q,
+              category: q.category || q.topic || "General",
+            }))
+          : []
+      );
+    } catch (err) {
+      console.error("Fetch quizzes error:", err);
+      setError(err.message || "Unable to connect to backend server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuizzes();
+  }, []);
+
   const filteredQuizzes = quizzes.filter((quiz) => {
     const title = String(quiz.title || "").toLowerCase();
-    const category = String(quiz.category || "").toLowerCase();
+    const category = String(quiz.category || quiz.topic || "").toLowerCase();
     const searchText = search.toLowerCase().trim();
 
     const matchesSearch =
@@ -73,10 +84,10 @@ function FacultyManageQuizzes() {
     setEditingId(quiz.id);
     setForm({
       title: quiz.title,
-      category: quiz.category,
-      questions: String(quiz.questions),
-      duration: String(quiz.duration),
-      status: quiz.status,
+      category: quiz.category || quiz.topic || "",
+      questions: String(quiz.questions || 10),
+      duration: String(quiz.duration || 15),
+      status: quiz.status || "Published",
     });
     setShowForm(true);
   };
@@ -86,7 +97,7 @@ function FacultyManageQuizzes() {
     setForm((previous) => ({ ...previous, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -99,46 +110,86 @@ function FacultyManageQuizzes() {
       return;
     }
 
-    const quizData = {
+    const payload = {
       title: form.title.trim(),
-      category: form.category.trim(),
+      topic: form.category.trim(),
       questions: Number(form.questions),
       duration: Number(form.duration),
       status: form.status,
     };
 
-    if (editingId !== null) {
-      setQuizzes((previous) =>
-        previous.map((quiz) =>
-          quiz.id === editingId ? { ...quiz, ...quizData } : quiz
-        )
-      );
-    } else {
-      setQuizzes((previous) => [
-        ...previous,
-        { id: Date.now(), ...quizData },
-      ]);
-    }
+    try {
+      if (editingId !== null) {
+        const response = await fetch(
+          `http://localhost:5000/api/quizzes/${editingId}`,
+          {
+            method: "PUT",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload),
+          }
+        );
 
-    setShowForm(false);
-    setForm(emptyForm);
-    setEditingId(null);
+        if (!response.ok) {
+          const data = await response.json();
+          alert(data.message || "Failed to update quiz.");
+          return;
+        }
+      } else {
+        const response = await fetch("http://localhost:5000/api/quizzes", {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          alert(data.message || "Failed to create quiz.");
+          return;
+        }
+      }
+
+      setShowForm(false);
+      setForm(emptyForm);
+      setEditingId(null);
+      fetchQuizzes();
+    } catch (err) {
+      console.error("Save quiz error:", err);
+      alert("Unable to save quiz.");
+    }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this quiz?"
     );
 
-    if (confirmed) {
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/quizzes/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.message || "Failed to delete quiz.");
+        return;
+      }
+
       setQuizzes((previous) => previous.filter((quiz) => quiz.id !== id));
+    } catch (err) {
+      console.error("Delete quiz error:", err);
+      alert("Unable to delete quiz.");
     }
   };
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
       localStorage.removeItem("currentUser");
-      navigate("/");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/Login");
     }
   };
 
@@ -146,60 +197,65 @@ function FacultyManageQuizzes() {
     <div className="faculty-layout">
       <aside className="faculty-sidebar">
         <div className="faculty-brand">
-          <div className="faculty-brand-icon">E</div>
-          <div>
-            <h2>EventFlow</h2>
-            <p>Faculty Portal</p>
-          </div>
+          <span className="faculty-brand-icon">✦</span>
+          <span>EventFlow</span>
         </div>
 
-        <div className="faculty-menu-title">MAIN MENU</div>
+        <p className="faculty-menu-label">FACULTY MENU</p>
 
         <nav className="faculty-navigation">
-          <button type="button" onClick={() => navigate("/faculty")}>
-            <span>▦</span>
-            <span>Dashboard</span>
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty")}
+          >
+            <span className="faculty-nav-icon">▦</span>
+            Dashboard
           </button>
 
           <button
             type="button"
+            className="faculty-nav-link "
             onClick={() => navigate("/faculty/events")}
           >
-            <span>▣</span>
-            <span>Manage Events</span>
+            <span className="faculty-nav-icon">◈</span>
+            Manage Events
           </button>
 
           <button
             type="button"
+            className="faculty-nav-link"
             onClick={() => navigate("/faculty/registrations")}
           >
-            <span>☷</span>
-            <span>Registrations</span>
+            <span className="faculty-nav-icon">♙</span>
+            Registrations
           </button>
 
           <button
             type="button"
-            className="active"
+            className="faculty-nav-link active"
             onClick={() => navigate("/faculty/quizzes")}
           >
-            <span>✎</span>
-            <span>Manage Quizzes</span>
+            <span className="faculty-nav-icon">☷</span>
+            Manage Quizzes
           </button>
 
           <button
             type="button"
+            className="faculty-nav-link"
             onClick={() => navigate("/faculty/results")}
           >
-            <span>▤</span>
-            <span>Quiz Results</span>
+            <span className="faculty-nav-icon">▤</span>
+            Student Results
           </button>
 
           <button
             type="button"
+            className="faculty-nav-link"
             onClick={() => navigate("/faculty/profile")}
           >
-            <span>♙</span>
-            <span>My Profile</span>
+            <span className="faculty-nav-icon">◎</span>
+            My Profile
           </button>
         </nav>
 
@@ -213,107 +269,107 @@ function FacultyManageQuizzes() {
         </button>
       </aside>
 
-      <main className="faculty-main">
+      <main className="faculty-main faculty-quizzes-main">
         <header className="faculty-topbar">
           <div>
-            <h1>Manage Quizzes</h1>
-            <p>Create, update and manage learning quizzes.</p>
+            <h2>Manage Quizzes</h2>
+            <p>Create and edit quizzes for learning assessment.</p>
           </div>
 
-          <div className="faculty-topbar-user">
+          <div className="faculty-account">
             <div className="faculty-avatar">F</div>
             <div>
-              <strong>Faculty</strong>
-              <span>Faculty Account</span>
+              <strong>Faculty Member</strong>
+              <span>Faculty</span>
             </div>
           </div>
         </header>
 
-        <section className="quiz-welcome">
+        {error && (
+          <div style={{ color: "#e11d48", padding: "10px", margin: "10px 0" }}>
+            {error}
+          </div>
+        )}
+
+        <section className="faculty-quizzes-banner">
           <div>
-            <span className="quiz-eyebrow">LEARNING MANAGEMENT</span>
-            <h2>Manage Your Quizzes</h2>
-            <p>
-              Create quizzes to help students test their knowledge and
-              improve their learning progress.
-            </p>
+            <p>EVENTFLOW / FACULTY</p>
+            <h1>Learning Assessments</h1>
+            <span>Create learning assessments for students to practice.</span>
           </div>
-          <div className="quiz-welcome-icon">✎</div>
+
+          <button
+            type="button"
+            className="faculty-create-btn"
+            onClick={openCreateForm}
+          >
+            + Create New Quiz
+          </button>
         </section>
 
-        <section className="quiz-stat-grid">
-          <div className="quiz-stat-card">
-            <div className="quiz-stat-icon purple">▤</div>
-            <div>
-              <p>Total Quizzes</p>
-              <h3>{quizzes.length}</h3>
-            </div>
+        <section className="faculty-quizzes-stats">
+          <div className="faculty-quiz-stat">
+            <span>Total Quizzes</span>
+            <h2>{quizzes.length}</h2>
+            <p>All active quizzes</p>
           </div>
 
-          <div className="quiz-stat-card">
-            <div className="quiz-stat-icon green">✓</div>
-            <div>
-              <p>Published</p>
-              <h3>
-                {quizzes.filter((quiz) => quiz.status === "Published").length}
-              </h3>
-            </div>
+          <div className="faculty-quiz-stat">
+            <span>Published</span>
+            <h2>
+              {
+                quizzes.filter(
+                  (item) => item.status === "Published"
+                ).length
+              }
+            </h2>
+            <p>Available to students</p>
           </div>
 
-          <div className="quiz-stat-card">
-            <div className="quiz-stat-icon orange">✎</div>
-            <div>
-              <p>Draft Quizzes</p>
-              <h3>
-                {quizzes.filter((quiz) => quiz.status === "Draft").length}
-              </h3>
-            </div>
+          <div className="faculty-quiz-stat">
+            <span>Draft</span>
+            <h2>
+              {
+                quizzes.filter((item) => item.status === "Draft")
+                  .length
+              }
+            </h2>
+            <p>Unpublished quizzes</p>
           </div>
         </section>
 
-        <section className="quiz-content-card">
-          <div className="quiz-content-heading">
+        <section className="faculty-quizzes-table-card">
+          <div className="faculty-quizzes-heading">
             <div>
-              <h2>Quiz List</h2>
-              <p>View and manage all your quizzes here.</p>
+              <h2>All Quizzes</h2>
+              <p>Manage learning topics and duration.</p>
             </div>
-
-            <button
-              type="button"
-              className="quiz-create-button"
-              onClick={openCreateForm}
-            >
-              + Create Quiz
-            </button>
           </div>
 
-          <div className="quiz-toolbar">
-            <div className="quiz-search-box">
-              <span>⌕</span>
-              <input
-                type="text"
-                placeholder="Search quizzes..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+          <div className="faculty-quizzes-filters">
+            <input
+              type="text"
+              placeholder="Search quiz by title or topic..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              aria-label="Filter quizzes by status"
             >
-              <option value="All">All Status</option>
+              <option value="All">All Statuses</option>
               <option value="Published">Published</option>
               <option value="Draft">Draft</option>
             </select>
           </div>
 
-          <div className="quiz-table-wrapper">
-            <table className="quiz-table">
+          <div className="faculty-quizzes-table-wrapper">
+            <table className="faculty-quizzes-table">
               <thead>
                 <tr>
-                  <th>QUIZ DETAILS</th>
+                  <th>QUIZ TITLE</th>
+                  <th>TOPIC / CATEGORY</th>
                   <th>QUESTIONS</th>
                   <th>DURATION</th>
                   <th>STATUS</th>
@@ -322,57 +378,55 @@ function FacultyManageQuizzes() {
               </thead>
 
               <tbody>
-                {filteredQuizzes.length > 0 ? (
-                  filteredQuizzes.map((quiz) => (
-                    <tr key={quiz.id}>
-                      <td>
-                        <div className="quiz-title-cell">
-                          <div className="quiz-row-icon">✎</div>
-                          <div>
-                            <strong>{quiz.title}</strong>
-                            <span>{quiz.category}</span>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>{quiz.questions} questions</td>
-                      <td>{quiz.duration} mins</td>
-
-                      <td>
-                        <span
-                          className={`quiz-status ${
-                            quiz.status === "Published"
-                              ? "published"
-                              : "draft"
-                          }`}
-                        >
-                          {quiz.status}
-                        </span>
-                      </td>
-
-                      <td>
-                        <div className="quiz-actions">
-                          <button
-                            type="button"
-                            className="quiz-edit-button"
-                            onClick={() => openEditForm(quiz)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="quiz-delete-button"
-                            onClick={() => handleDelete(quiz.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
+                {loading ? (
                   <tr>
-                    <td colSpan="5" className="quiz-empty">
+                    <td colSpan="6" className="faculty-quizzes-empty">
+                      Loading quizzes from database...
+                    </td>
+                  </tr>
+                ) : filteredQuizzes.map((quiz) => (
+                  <tr key={quiz.id}>
+                    <td>
+                      <strong>{quiz.title}</strong>
+                    </td>
+
+                    <td>{quiz.category || quiz.topic}</td>
+                    <td>{quiz.questions} Questions</td>
+                    <td>{quiz.duration} Mins</td>
+
+                    <td>
+                      <span
+                        className={`faculty-quiz-status ${String(quiz.status || "").toLowerCase()}`}
+                      >
+                        {quiz.status}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="faculty-quiz-actions">
+                        <button
+                          type="button"
+                          className="faculty-quiz-edit"
+                          onClick={() => openEditForm(quiz)}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          className="faculty-quiz-delete"
+                          onClick={() => handleDelete(quiz.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+
+                {!loading && filteredQuizzes.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="faculty-quizzes-empty">
                       No quizzes found.
                     </td>
                   </tr>
@@ -380,92 +434,74 @@ function FacultyManageQuizzes() {
               </tbody>
             </table>
           </div>
-
-          <div className="quiz-table-footer">
-            Showing {filteredQuizzes.length} of {quizzes.length} quizzes
-          </div>
         </section>
       </main>
 
       {showForm && (
-        <div
-          className="quiz-modal-overlay"
-          onClick={() => setShowForm(false)}
-        >
-          <div
-            className="quiz-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="quiz-modal-heading">
+        <div className="faculty-quiz-modal-overlay">
+          <div className="faculty-quiz-modal">
+            <div className="faculty-quiz-modal-heading">
               <div>
                 <h2>{editingId !== null ? "Edit Quiz" : "Create Quiz"}</h2>
-                <p>Enter the quiz details below.</p>
+                <p>Provide quiz details below.</p>
               </div>
 
               <button
                 type="button"
-                className="quiz-modal-close"
+                className="faculty-quiz-close"
                 onClick={() => setShowForm(false)}
-                aria-label="Close form"
               >
                 ×
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <label htmlFor="quiz-title">Quiz Title</label>
+              <label>Quiz Title</label>
               <input
-                id="quiz-title"
                 name="title"
-                type="text"
-                placeholder="Enter quiz title"
                 value={form.title}
                 onChange={handleChange}
+                placeholder="e.g. Node.js & Express Fundamentals"
                 required
               />
 
-              <label htmlFor="quiz-category">Category</label>
+              <label>Topic / Category</label>
               <input
-                id="quiz-category"
                 name="category"
-                type="text"
-                placeholder="e.g. Web Development"
                 value={form.category}
                 onChange={handleChange}
+                placeholder="e.g. Web Development"
                 required
               />
 
-              <div className="quiz-form-row">
+              <div className="faculty-quiz-form-row">
                 <div>
-                  <label htmlFor="quiz-questions">Number of Questions</label>
+                  <label>Questions</label>
                   <input
-                    id="quiz-questions"
                     name="questions"
                     type="number"
-                    min="1"
                     value={form.questions}
                     onChange={handleChange}
+                    min="1"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="quiz-duration">Duration (minutes)</label>
+                  <label>Duration (Minutes)</label>
                   <input
-                    id="quiz-duration"
                     name="duration"
                     type="number"
-                    min="1"
                     value={form.duration}
                     onChange={handleChange}
+                    min="1"
                     required
                   />
                 </div>
               </div>
 
-              <label htmlFor="quiz-status">Status</label>
+              <label>Status</label>
               <select
-                id="quiz-status"
                 name="status"
                 value={form.status}
                 onChange={handleChange}
@@ -474,16 +510,19 @@ function FacultyManageQuizzes() {
                 <option value="Published">Published</option>
               </select>
 
-              <div className="quiz-modal-actions">
+              <div className="faculty-quiz-modal-actions">
                 <button
                   type="button"
-                  className="quiz-cancel-button"
+                  className="faculty-quiz-cancel"
                   onClick={() => setShowForm(false)}
                 >
                   Cancel
                 </button>
 
-                <button type="submit" className="quiz-save-button">
+                <button
+                  type="submit"
+                  className="faculty-quiz-save"
+                >
                   {editingId !== null ? "Save Changes" : "Create Quiz"}
                 </button>
               </div>
@@ -496,4 +535,3 @@ function FacultyManageQuizzes() {
 }
 
 export default FacultyManageQuizzes;
-

@@ -125,15 +125,25 @@ function CreativeMind() {
 
 
           <div className="event-actions">
- <button className="register-btn"
-      onClick={() =>
-        navigate("/registration/CreativeMind", {
-          state: { eventName: "Creative Minds Workshop" }
-        })
-      }
-    >
-      Register Now
-    </button>
+ <button
+  className="register-btn"
+  onClick={() =>
+    navigate("/registration/CreativeMind", {
+      state: {
+        event: {
+          eventName: "Creative Minds Workshop",
+          eventType: "Workshop",
+          date: "17 Oct 2026",
+          time: "10:00 AM – 1:00 PM",
+          venue: "Seminar Hall",
+        },
+        eventName: "Creative Minds Workshop",
+      },
+    })
+  }
+>
+  Register Now
+</button>
 
             <button className="heart-btn">
               ♡

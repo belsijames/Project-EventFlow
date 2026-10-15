@@ -124,15 +124,26 @@ function CareerGuidance() {
 
           <div className="event-actions">
 
-             <button className="register-btn"
-      onClick={() =>
-        navigate("/registration/CareerGuidance", {
-          state: { eventName: "Career Guidance" }
-        })
-      }
-    >
-      Register Now
-    </button>
+<button
+  className="register-btn"
+  onClick={() =>
+    navigate("/registration/CareerGuidance", {
+      state: {
+        event: {
+          eventName: "Career Guidance Session",
+          eventType: "Session",
+          date: "22 Oct 2026",
+          time: "10:00 AM – 12:00 PM",
+          venue: "Seminar Hall",
+        },
+        eventName: "Career Guidance Session",
+      },
+    })
+  }
+>
+  Register Now
+</button>
+
             <button className="heart-btn">
               ♡
             </button>

@@ -102,42 +102,72 @@ function FacultyCertificate() {
 
   return (
     <div className="faculty-certificate-page">
-      <aside className="faculty-cert-sidebar">
-        <div className="faculty-cert-brand">
-          <div className="faculty-cert-logo">E</div>
-          <div>
-            <h2>EventFlow</h2>
-            <p>Faculty Portal</p>
-          </div>
+      <aside className="faculty-sidebar">
+        <div className="faculty-brand">
+          <span className="faculty-brand-icon">✦</span>
+          <span>EventFlow</span>
         </div>
 
-        <p className="faculty-cert-menu-label">FACULTY MENU</p>
+        <p className="faculty-menu-label">FACULTY MENU</p>
 
-        <button
-          className="faculty-cert-nav"
-          onClick={() => navigate("/FacultyDashboard")}
-        >
-          <span>▦</span> Dashboard
-        </button>
+        <nav className="faculty-navigation">
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty")}
+          >
+            <span className="faculty-nav-icon">▦</span>
+            Dashboard
+          </button>
 
-        <button
-          className="faculty-cert-nav"
-          onClick={() => navigate("/FacultyRegistrations")}
-        >
-          <span>♙</span> Registrations
-        </button>
+          <button
+            type="button"
+            className="faculty-nav-link active"
+            onClick={() => navigate("/faculty/events")}
+          >
+            <span className="faculty-nav-icon">◈</span>
+            Manage Events
+          </button>
 
-        <button className="faculty-cert-nav active">
-          <span>✓</span> Certificate Verification
-        </button>
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/registrations")}
+          >
+            <span className="faculty-nav-icon">♙</span>
+            Registrations
+          </button>
 
-        <div className="faculty-cert-sidebar-bottom">
-          <div className="faculty-cert-help-icon">?</div>
-          <h4>Certificate Review</h4>
-          <p>Verify event participation before recommending certificates.</p>
-        </div>
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/quizzes")}
+          >
+            <span className="faculty-nav-icon">☷</span>
+            Manage Quizzes
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/results")}
+          >
+            <span className="faculty-nav-icon">▤</span>
+            Student Results
+          </button>
+
+          <button
+            type="button"
+            className="faculty-nav-link"
+            onClick={() => navigate("/faculty/profile")}
+          >
+            <span className="faculty-nav-icon">◎</span>
+            My Profile
+          </button>
+        </nav>
+
+       
       </aside>
-
       <main className="faculty-cert-main">
         <header className="faculty-cert-header">
           <div>

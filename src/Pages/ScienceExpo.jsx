@@ -125,15 +125,26 @@ function ScienceExpo() {
 
           <div className="event-actions">
 
-            <button className="register-btn"
-      onClick={() =>
-        navigate("/registration/ScienceExpo", {
-          state: { eventName: "Science and Innovation Expo" }
-        })
-      }
-    >
-      Register Now
-    </button>
+<button
+  className="register-btn"
+  onClick={() =>
+    navigate("/registration/ScienceExpo", {
+      state: {
+        event: {
+          eventName: "Science and Innovation Expo",
+          eventType: "Expo",
+          date: "25 Oct 2026",
+          time: "10:00 AM – 3:00 PM",
+          venue: "College Auditorium",
+        },
+        eventName: "Science and Innovation Expo",
+      },
+    })
+  }
+>
+  Register Now
+</button>
+
             <button className="heart-btn">
               ♡
             </button>
